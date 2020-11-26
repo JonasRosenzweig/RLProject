@@ -90,14 +90,14 @@ class DQN:
             epoch_rewards.append(rewards)
             env.close()
 
-        for n, rewards in enumerate(epoch_rewards):
-            x = range(len(rewards))
-            cumsum = np.cumsum(rewards)
-            avgs = [cumsum[ep]/(ep+1) if ep<100 else (cumsum[ep]-cumsum[ep-100])/100 for ep in x]
-            plt.plot(x, avgs)
-        plt.title("Agent Performance")
-        plt.xlabel("Episode")
-        plt.ylabel("Average Reward")
+    for n, rewards in enumerate(epoch_rewards):
+        x = range(len(rewards))
+        cumsum = np.cumsum(rewards)
+        avgs = [cumsum[ep]/(ep+1) if ep<100 else (cumsum[ep]-cumsum[ep-100])/100 for ep in x]
+        plt.plot(x, avgs)
+    plt.title("Agent Performance")
+    plt.xlabel("Episode")
+    plt.ylabel("Average Reward")
 
 
 if __name__ == '__main__':

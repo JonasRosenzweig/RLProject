@@ -1,21 +1,19 @@
-#!/usr/bin/env python
-# coding: utf-8
+# To add a new cell, type '# %%'
+# To add a new markdown cell, type '# %% [markdown]'
+# %%
+from IPython import get_ipython
 
+# %% [markdown]
 # # Reinforcement Learning in OpenAI
-
+# %% [markdown]
 # Let's start buy installing the gym module:
 
-# In[1]:
+# %%
+get_ipython().system('pip install gym')
+get_ipython().system('pip install keras')
 
 
-# get_ipython().system('pip install gym')
-
-
-# Now let's import some modules:
-
-# In[1]:
-
-
+# %%
 import gym
 import math
 import random
@@ -33,25 +31,21 @@ from keras.models import load_model
 
 from collections import deque
 
-
+# %% [markdown]
 # Now, let's see how we can interact with the environment in OpenAI:
 
-# In[3]:
-
-
+# %%
 env = gym.make('CartPole-v0')
 # create the CartPole-v0 gym environment
 print("Observation space:", env.observation_space)
 print("Action space:", env.action_space)
 
-
+# %% [markdown]
 # In OpenAI environments, the input we give our agents is taken from the Observation space. In this case, Box(4,) refers to a continuous space. If we go to the CartPole-v1 documentation:(https://github.com/openai/gym/blob/master/gym/envs/classic_control/cartpole.py) we can see the observation space gives us 4 continuous observation (input) options, and 2 discrete action (output) options.
 # 
 # Now let's see how we can make a basic agent:
 
-# In[4]:
-
-
+# %%
 class RandomAgent():
     # create basicAgent class
     def __init__(self,env):
@@ -65,12 +59,10 @@ class RandomAgent():
         # choose random action 
         return action 
 
-
+# %% [markdown]
 # Now that we have a basic agent that returns a random action, lets run it:
 
-# In[5]:
-
-
+# %%
 agent = RandomAgent(env)
 # create agent object
 state = env.reset() 
@@ -90,14 +82,12 @@ for _ in range(100):
 env.close()
 print("Reward: {}".format(total_reward))
 
-
+# %% [markdown]
 # Each environment has its own "Solved" requirements, and some remain unsolved, as can be seen on the Leaderboard: https://github.com/openai/gym/wiki/Leaderboard For the CartPole-v1 env, "done" returns True when the pole is more than 15 degrees from vertical, or the cart moves more than 2.4 units from the center, and "solving" is defined as getting average reward of 195.0 over 100 consecutive trials. A reward of +1 is provided for every timestep that the pole remains upright. Done also returns true when the reward is 200.
 # 
 # Obviously, our random agent isn't performing that well. Let's try and improve on this by giving it a non-random policy and interacting with the observation space:
 
-# In[6]:
-
-
+# %%
 class BasicPolicyAgent():
     def __init__(self,env):
         self.action_size = env.action_space.n
@@ -123,7 +113,7 @@ for _ in range(100):
 env.close()
 print("Reward: {}".format(total_reward))
 
-
+# %% [markdown]
 # We can see that even with a very simple policy, the behavior is improved. Now we've seen how to interact with the environment and create agents.
 # 
 # Let's look at a simple implementation of the HillClimbing method. Essentially, we want a function that takes all the inputs (observations) available and outputs a vector with the predicted values of the next state of the environment based on a given action.
@@ -132,9 +122,7 @@ print("Reward: {}".format(total_reward))
 # 
 # This weights matrix is initialized with random weights. We use this initial weights matrix to get our action (output) vector from our observation (input) vector. We calculate the total reward from the episode, and save it as our best reward. We also save the weights matrix as our best weights. We then sample a new random weights matrix, to which we add a random noise matrix of the same dimensions for variance. If the new total reward is higher than the best total reward, we use the weights that gave us this new higher reward and save them as best weights, and halve the noise matrix to decrease variance. If the new total reward is lower, we keep the old weights and double the noise matrix:
 
-# In[7]:
-
-
+# %%
 class HillClimbingAgent():
     def __init__(self, env):
         self.state_dim = env.observation_space.shape
@@ -208,14 +196,12 @@ plt.title("HillClimbingAgent Performance")
 plt.xlabel("Episode")
 plt.ylabel("Average Reward")
 
-
+# %% [markdown]
 # After just 200 episodes, we can see that the agent is now able to keep the pole upright for the maximum 200 frames consistently (depending on how lucky you are with the random initialized weights matrix, this may take more episodes).
 # 
 # Let's try this method in a different gym environment. The acrobot system includes two joints and two links, where the joint between the two links is actuated. Initially, the links are hanging downwards, and the goal is to swing the end of the lower link up to a given height. The action is either applying +1, 0 or -1 torque on the joint between the two pendulum links. The Observation space or state consists of the sin() and cos() of the two rotational joint angles and the joint angular velocities.
 
-# In[8]:
-
-
+# %%
 env_name = "Acrobot-v1"
 env = gym.make(env_name)
 num_runs = 1
@@ -225,7 +211,7 @@ for n in range(num_runs):
   print("Run {}".format(n))
   ep_rewards = []
   agent = HillClimbingAgent(env)
-  num_episodes = 500
+  num_episodes = 200
 
   for ep in range(num_episodes):
     state = env.reset()
@@ -253,7 +239,7 @@ plt.title("Agent Performance")
 plt.xlabel("Episode")
 plt.ylabel("Average Reward")
 
-
+# %% [markdown]
 # Now let's introduce Q-Learning; it is a reinforcement learning algorithm that aims to find the best action to take given a current state to maximize reward. This algorithm is considered off-policy due to the fact the Q-learning function learns from actions outside the current policy, like taking random actions.
 # 
 # The first step is to create a Q-table (or matrix) that follows the shape of [state, action] and we initialize each value in the matrix to zero. We update and store our Q-values in this matrix after each episode. This then becomes a reference table for our agent to select the best action based on the highest Q-value.
@@ -262,9 +248,7 @@ plt.ylabel("Average Reward")
 # 
 # We've mentioned epsilon (exploration probability), one of the hyperparameters, there are others that are useful. The learning rate, sometimes denoted alpha, is how much an updated value is "accepted" vs the old one. The difference between the new and old value is multiplied by this learning rate and added to the previous q-value. A discount factor, usually denoted gamma, can be used to balance immediate and future reward.
 
-# In[9]:
-
-
+# %%
 class QAgent():
     def __init__(self, env, buckets=(3, 3, 6, 6,), min_alpha=0.1, min_epsilon=0.1, gamma=1.0, ada_divisor=20):
         self.env = env # for choosing different environments
@@ -303,9 +287,7 @@ class QAgent():
         return max(self.min_alpha, min(1.0, 1.0 - math.log10((t + 1) / self.ada_divisor)))
 
 
-# In[10]:
-
-
+# %%
 num_runs = 1
 run_rewards = []
 env = gym.make('CartPole-v0')
@@ -313,7 +295,7 @@ env = gym.make('CartPole-v0')
 for n in range(num_runs):
   print("Run {}".format(n))
   ep_rewards = []
-  num_episodes = 1000
+  num_episodes = 200
   agent = QAgent(env)
 
   for ep in range(num_episodes):
@@ -355,9 +337,7 @@ plt.xlabel("Episode")
 plt.ylabel("Average Reward")
 
 
-# In[2]:
-
-
+# %%
 class DQNAgent:
     def __init__(self, env, lr, gamma, epsilon, epsilon_decay):
 
@@ -381,6 +361,7 @@ class DQNAgent:
 
     def initialize_model(self):
         model = Sequential()
+        # This is where we add the NN?
         model.add(Dense(512, input_dim=self.num_observation_space, activation=relu))
         model.add(Dense(256, activation=relu))
         model.add(Dense(self.num_action_space, activation=linear))
@@ -392,8 +373,10 @@ class DQNAgent:
 
     def get_action(self, state):
         if np.random.rand() < self.epsilon:
+            # Make random / exploratory choice if random number smaller than current epsilon.
             return random.randrange(self.num_action_space)
 
+        # Otherwise make exploitatory action, where the future states are predicted and an appropriate action taken.
         predicted_actions = self.model.predict(state)
         return np.argmax(predicted_actions[0])
 
@@ -444,9 +427,7 @@ class DQNAgent:
         self.model.save(name)
 
 
-# In[10]:
-
-
+# %%
 num_runs = 1
 run_rewards = []
 env = gym.make('LunarLander-v2')
@@ -454,50 +435,112 @@ lr = 0.001
 epsilon = 1.0
 epsilon_decay = 0.995
 gamma = 0.99
+def train(agent, can_stop = True):
+  for n in range(num_runs):
+      print("Training Run {}".format(n))
+      ep_rewards = []
+      num_episodes = 3
+      agent = DQNAgent(env, lr, epsilon, epsilon_decay, gamma)
+      
+      for ep in range(num_episodes):
+          state = env.reset()
+          total_reward = 0
+          num_steps = 1000
+          state = np.reshape(state, [1, agent.num_observation_space])
+          for step in range(num_steps):
+              # env.render()
+              # time.sleep(0.0003)
+              received_action = agent.get_action(state)
+              next_state, reward, done, info = env.step(received_action)
+              next_state = np.reshape(next_state, [1, agent.num_observation_space])
+              agent.add_to_replay_memory(state, received_action, reward, next_state, done)
+              total_reward += reward
+              state = next_state
+              agent.update_counter()
+              agent.learn_and_update_weights_by_reply()  
 
-for n in range(num_runs):
-    print("Training Run {}".format(n))
-    ep_rewards = []
-    num_episodes = 40
-    agent = DQNAgent(env, lr, epsilon, epsilon_decay, gamma)
-    
-    for ep in range(num_episodes):
-        state = env.reset()
-        total_reward = 0
-        num_steps = 100
-        state = np.reshape(state, [1, agent.num_observation_space])
-        total_reward += reward
-        for step in range(num_steps):
-            # env.render()
-            received_action = agent.get_action(state)
-            next_state, reward, done, info = env.step(received_action)
-            next_state = np.reshape(next_state, [1, agent.num_observation_space])
-            agent.add_to_replay_memory(state, received_action, reward, next_state, done)
-            #total_reward += reward
-            state = next_state
-            agent.update_counter()
-            agent.learn_and_update_weights_by_reply()  
-        ep_rewards.append(total_reward)
-        print("Episode: {}, total_reward: {:.2f}".format(ep, total_reward))
-run_rewards.append(ep_rewards)
-env.close()
+              if done: 
+                break
 
-for n, ep_rewards in enumerate(run_rewards):
-  x = range(len(ep_rewards))
-  cumsum = np.cumsum(ep_rewards)
-  avgs = [cumsum[ep]/(ep+1) if ep<100 else (cumsum[ep]-cumsum[ep-100])/100 for ep in x]
-  plt.plot(x, avgs)
-plt.title("Agent Performance")
-plt.xlabel("Episode")
-plt.ylabel("Average Reward")
-        
-        
+              if agent.epsilon > agent.epsilon_min:
+                agent.epsilon *= agent.epsilon_decay
 
-    
+              last_rewards_mean = np.mean(agent.rewards_list[-100:])
+              if last_rewards_mean > 200 and can_stop:
+                print("DQN Training Complete...")
+                break
+
+          ep_rewards.append(total_reward)
+          print("Episode: {}, total_reward: {:.2f}, last_step_reward: {:.3f}".format(ep, total_reward, reward))
+  run_rewards.append(ep_rewards)
+  env.close()
+
+  for n, ep_rewards in enumerate(run_rewards):
+    x = range(len(ep_rewards))
+    cumsum = np.cumsum(ep_rewards)
+    avgs = [cumsum[ep]/(ep+1) if ep<100 else (cumsum[ep]-cumsum[ep-100])/100 for ep in x]
+    plt.plot(x, avgs)
+  plt.title("Agent Performance")
+  plt.xlabel("Episode")
+  plt.ylabel("Average Reward")
+
+train(DQNAgent, True)
+save_dir = "saved_models_"
+model = DQNAgent(env, lr, epsilon, epsilon_decay, gamma)
+model.save(save_dir + "trained_model.h5")
 
 
-# In[ ]:
+# %%
+num_runs = 1
+run_rewards = []
 
+def test_trained_model(agent, trained_model):
+    for n in range(num_runs):
+      print("Testing Run {}".format(n))
+      ep_rewards = []
+      num_episodes = 10
+      agent = DQNAgent(env, lr, epsilon, epsilon_decay, gamma)
+
+      for ep in range(num_episodes):
+          current_state = env.reset()
+          num_observation_space = env.observation_space.shape[0]
+          current_state = np.reshape(current_state, [1, num_observation_space])
+          total_reward = 0
+          num_steps = 1000
+
+          for step in range(num_steps):
+              # env.render()
+              # time.sleep(0.0003)
+              selected_action = np.argmax(trained_model.predict(current_state)[0])
+              new_state, reward, done, info = env.step(selected_action)
+              new_state = np.reshape(new_state, [1, num_observation_space])
+              current_state = new_state
+              total_reward += reward
+              if done:
+                  break
+          ep_rewards.append(total_reward)
+          print("Episode: {}, total_reward: {:.2f}, last_step_reward: {:.3f}".format(ep, total_reward, reward))
+    run_rewards.append(ep_rewards)
+    env.close()
+
+    for n, ep_rewards in enumerate(run_rewards):
+        x = range(len(ep_rewards))
+        cumsum = np.cumsum(ep_rewards)
+        avgs = [cumsum[ep]/(ep+1) if ep<100 else (cumsum[ep]-cumsum[ep-100])/100 for ep in x]
+        plt.plot(x, avgs)
+    plt.title("Agent Performance")
+    plt.xlabel("Episode")
+    plt.ylabel("Average Reward")
+
+
+
+# %%
+save_dir = "saved_models_"
+trained_model = load_model(save_dir + "trained_model.h5")
+test_trained_model(DQNAgent, trained_model)
+
+
+# %%
 
 
 
