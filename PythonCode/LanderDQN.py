@@ -41,7 +41,7 @@ class DQN:
         predicted_actions = self.model.predict(state)
         return np.argmax(predicted_actions[0])
 
-    def train(self, episodes, num_epochs=1):
+    def train(self, episodes, num_epochs):
         for epoch in range(num_epochs):
             epoch_rewards = []
             rewards = []
@@ -73,26 +73,27 @@ class DQN:
             epoch_rewards.append(rewards)
             env.close()
             
-        for n, rewards in enumerate(epoch_rewards):
-            x = range(len(rewards))
-            cumsum = np.cumsum(rewards)
-            avgs = [cumsum[ep]/(ep+1) if ep<100 else (cumsum[ep]-cumsum[ep-100])/100 for ep in x]
-            plt.plot(x, avgs)
-        plt.title("DQN Training Performance")
-        plt.xlabel("Episode")
-        plt.ylabel("Average Reward")
-        plt.savefig("DQN_Training_Performance.png")
+            for n, rewards in enumerate(epoch_rewards):
+                x = range(len(rewards))
+                cumsum = np.cumsum(rewards)
+                avgs = [cumsum[ep]/(ep+1) if ep<100 else (cumsum[ep]-cumsum[ep-100])/100 for ep in x]
+                plt.plot(x, avgs, label = "Training Epoch {}".format(epoch))
+            plt.legend()
+            plt.xlabel("Episode")
+            plt.ylabel("Average Reward")
+            plt.title("DQN Training Performance")
+            plt.savefig("DQN_Training_Performance")
+            
 
     def save(self, name):
         self.model.save(name)
 
-    def test_trained_model(self, trained_model, num_epochs):
+    def test_trained_model(self, trained_model, num_epochs, num_episodes):
         for epoch in range(num_epochs):
             epoch_rewards = []
             rewards = []
-            episodes = 200
             steps = 1000
-            for episode in range(episodes):
+            for episode in range(num_episodes):
                 trained_state = env.reset()
                 ep_reward = 0
                 observation_space_dim = env.observation_space.shape[0]
@@ -112,27 +113,28 @@ class DQN:
             epoch_rewards.append(rewards)
             env.close()
 
-        for n, rewards in enumerate(epoch_rewards):
-            x = range(len(rewards))
-            cumsum = np.cumsum(rewards)
-            avgs = [cumsum[ep]/(ep+1) if ep<100 else (cumsum[ep]-cumsum[ep-100])/100 for ep in x]
-            plt.plot(x, avgs)
-        plt.title("DQN Performance after Training")
-        plt.xlabel("Episode")
-        plt.ylabel("Average Reward")
-        plt.savefig("DQN_Performance_after_Training.png")
+            for n, rewards in enumerate(epoch_rewards):
+                x = range(len(rewards))
+                cumsum = np.cumsum(rewards)
+                avgs = [cumsum[ep]/(ep+1) if ep<100 else (cumsum[ep]-cumsum[ep-100])/100 for ep in x]
+                plt.plot(x, avgs, label="Testing Curve")
+            plt.legend()
+            plt.title("DQN Performance after Training")
+            plt.xlabel("Episode")
+            plt.ylabel("Average Reward")
+            plt.savefig("DQN_Performance_after_Training.png")
 
 if __name__ == '__main__':
     env = gym.make('LunarLander-v2')
     lr = 1
     eps = 1.0
     eps_decay = 0.995
-    training_episodes = 5000
+    training_episodes = 3
     model = DQN(env, lr, eps, eps_decay)
-    model.train(training_episodes, num_epochs=1)
+    model.train(training_episodes, num_epochs=2)
     model.save("simpleDQN_trained_model.h5")
     trained_model = load_model("simpleDQN_trained_model.h5")
-    model.test_trained_model(trained_model, num_epochs = 1)
+    model.test_trained_model(trained_model, num_epochs = 1, num_episodes=2)
 
 
 
