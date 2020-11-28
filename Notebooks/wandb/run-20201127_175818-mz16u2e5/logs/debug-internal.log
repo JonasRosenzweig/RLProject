@@ -1279,3 +1279,14 @@ requests.exceptions.ConnectionError: HTTPSConnectionPool(host='api.wandb.ai', po
 2020-11-28 12:35:24,966 DEBUG   SenderThread:22456 [sender.py:send_request():99] send_request: status
 2020-11-28 12:35:24,968 DEBUG   SenderThread:22456 [connectionpool.py:_new_conn():937] Starting new HTTPS connection (1): api.wandb.ai:443
 2020-11-28 12:35:25,199 DEBUG   SenderThread:22456 [connectionpool.py:_make_request():433] https://api.wandb.ai:443 "POST /graphql HTTP/1.1" 200 None
+2020-11-28 12:35:40,210 DEBUG   HandlerThread:22456 [handler.py:handle_request():55] handle_request: status
+2020-11-28 12:35:40,211 DEBUG   SenderThread:22456 [sender.py:send():90] send: request
+2020-11-28 12:35:40,211 DEBUG   SenderThread:22456 [sender.py:send_request():99] send_request: status
+2020-11-28 12:35:40,213 DEBUG   SenderThread:22456 [connectionpool.py:_new_conn():937] Starting new HTTPS connection (1): api.wandb.ai:443
+2020-11-28 12:35:40,457 DEBUG   SenderThread:22456 [connectionpool.py:_make_request():433] https://api.wandb.ai:443 "POST /graphql HTTP/1.1" 200 None
+2020-11-28 12:35:47,542 DEBUG   Thread-9  :22456 [connectionpool.py:_make_request():433] https://api.wandb.ai:443 "POST /files/sirbuster33/Phi_W&B.ipynb/mz16u2e5/file_stream HTTP/1.1" 200 None
+2020-11-28 12:35:55,467 DEBUG   HandlerThread:22456 [handler.py:handle_request():55] handle_request: status
+2020-11-28 12:35:55,468 DEBUG   SenderThread:22456 [sender.py:send():90] send: request
+2020-11-28 12:35:55,468 DEBUG   SenderThread:22456 [sender.py:send_request():99] send_request: status
+2020-11-28 12:35:55,470 DEBUG   SenderThread:22456 [connectionpool.py:_new_conn():937] Starting new HTTPS connection (1): api.wandb.ai:443
+2020-11-28 12:35:55,702 DEBUG   SenderThread:22456 [connectionpool.py:_make_request():433] https://api.wandb.ai:443 "POST /graphql HTTP/1.1" 200 None
