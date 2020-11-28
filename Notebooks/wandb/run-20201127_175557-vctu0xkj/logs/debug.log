@@ -1,0 +1,41 @@
+2020-11-27 17:55:57,855 INFO    MainThread:9928 [wandb_setup.py:_flush():70] setting env: {}
+2020-11-27 17:55:57,855 INFO    MainThread:9928 [wandb_setup.py:_flush():70] multiprocessing start_methods=spawn
+2020-11-27 17:55:57,855 INFO    MainThread:9928 [wandb_setup.py:_flush():70] setting login settings: {}
+2020-11-27 17:55:57,855 INFO    MainThread:9928 [wandb_setup.py:_flush():70] setting login settings: {'api_key': '2e7438e4c0159ce3c72bac66093ea6d7bd706924'}
+2020-11-27 17:55:57,856 INFO    MainThread:9928 [wandb_setup.py:_flush():70] configuring jupyter hooks <wandb.sdk.wandb_init._WandbInit object at 0x0000026B3C8ABAC0>
+2020-11-27 17:55:57,856 INFO    MainThread:9928 [wandb_init.py:_log_setup():303] Logging user logs to c:\Users\Kata\Documents\RUC_stuff_from_small_lenovo\Ruc\Philipp_RUC\5th_Semester\Course_3_Semester_Project\ProjectRepository_VSCode\RLProject\Notebooks\wandb\run-20201127_175557-vctu0xkj\logs\debug.log
+2020-11-27 17:55:57,859 INFO    MainThread:9928 [wandb_init.py:_log_setup():304] Logging internal logs to c:\Users\Kata\Documents\RUC_stuff_from_small_lenovo\Ruc\Philipp_RUC\5th_Semester\Course_3_Semester_Project\ProjectRepository_VSCode\RLProject\Notebooks\wandb\run-20201127_175557-vctu0xkj\logs\debug-internal.log
+2020-11-27 17:56:01,776 INFO    MainThread:9928 [wandb_run.py:_console_start():1218] atexit reg
+2020-11-27 17:56:01,777 INFO    MainThread:9928 [wandb_run.py:_redirect():1085] redirect: SettingsConsole.WRAP
+2020-11-27 17:56:01,777 INFO    MainThread:9928 [wandb_run.py:_redirect():1116] Wrapping output streams.
+2020-11-27 17:56:01,778 INFO    MainThread:9928 [wandb_run.py:_redirect():1132] Redirects installed.
+2020-11-27 17:56:01,780 INFO    MainThread:9928 [wandb_init.py:_pause_backend():224] pausing backend
+2020-11-27 17:56:01,790 INFO    MainThread:9928 [wandb_init.py:_resume_backend():229] resuming backend
+2020-11-27 17:56:01,793 INFO    MainThread:9928 [wandb_init.py:_pause_backend():224] pausing backend
+2020-11-27 17:56:01,806 INFO    MainThread:9928 [wandb_init.py:_resume_backend():229] resuming backend
+2020-11-27 17:56:01,808 INFO    MainThread:9928 [wandb_init.py:_pause_backend():224] pausing backend
+2020-11-27 17:56:01,823 INFO    MainThread:9928 [wandb_init.py:_resume_backend():229] resuming backend
+2020-11-27 17:56:01,826 INFO    MainThread:9928 [wandb_init.py:_pause_backend():224] pausing backend
+2020-11-27 17:56:01,842 INFO    MainThread:9928 [wandb_init.py:_resume_backend():229] resuming backend
+2020-11-27 17:56:01,845 INFO    MainThread:9928 [wandb_init.py:_pause_backend():224] pausing backend
+2020-11-27 17:56:01,861 INFO    MainThread:9928 [wandb_init.py:_resume_backend():229] resuming backend
+2020-11-27 17:56:01,872 INFO    MainThread:9928 [wandb_init.py:_pause_backend():224] pausing backend
+2020-11-27 17:56:01,893 INFO    MainThread:9928 [wandb_init.py:_resume_backend():229] resuming backend
+2020-11-27 17:56:01,896 INFO    MainThread:9928 [wandb_init.py:_pause_backend():224] pausing backend
+2020-11-27 17:56:01,916 INFO    MainThread:9928 [wandb_init.py:_resume_backend():229] resuming backend
+2020-11-27 17:56:01,921 INFO    MainThread:9928 [wandb_init.py:_pause_backend():224] pausing backend
+2020-11-27 17:56:01,930 INFO    MainThread:9928 [wandb_init.py:_resume_backend():229] resuming backend
+2020-11-27 17:56:01,932 INFO    MainThread:9928 [wandb_init.py:_pause_backend():224] pausing backend
+2020-11-27 17:56:39,414 INFO    MainThread:9928 [wandb_init.py:_resume_backend():229] resuming backend
+2020-11-27 17:56:39,416 INFO    MainThread:9928 [wandb_init.py:_pause_backend():224] pausing backend
+2020-11-27 17:56:51,579 INFO    MainThread:9928 [wandb_init.py:_resume_backend():229] resuming backend
+2020-11-27 17:56:51,593 INFO    MainThread:9928 [wandb_setup.py:_flush():70] setting env: {}
+2020-11-27 17:56:51,593 INFO    MainThread:9928 [wandb_setup.py:_flush():70] multiprocessing start_methods=spawn
+2020-11-27 17:56:51,593 INFO    MainThread:9928 [wandb_setup.py:_flush():70] setting login settings: {}
+2020-11-27 17:56:51,593 INFO    MainThread:9928 [wandb_setup.py:_flush():70] setting login settings: {'api_key': '2e7438e4c0159ce3c72bac66093ea6d7bd706924'}
+2020-11-27 17:56:51,593 INFO    MainThread:9928 [wandb_setup.py:_flush():70] configuring jupyter hooks <wandb.sdk.wandb_init._WandbInit object at 0x0000026B3C8ABAC0>
+2020-11-27 17:56:51,594 INFO    MainThread:9928 [wandb_init.py:_log_setup():303] Logging user logs to c:\Users\Kata\Documents\RUC_stuff_from_small_lenovo\Ruc\Philipp_RUC\5th_Semester\Course_3_Semester_Project\ProjectRepository_VSCode\RLProject\Notebooks\wandb\run-20201127_175651-3s4vfqb1\logs\debug.log
+2020-11-27 17:56:51,595 INFO    MainThread:9928 [wandb_init.py:_log_setup():304] Logging internal logs to c:\Users\Kata\Documents\RUC_stuff_from_small_lenovo\Ruc\Philipp_RUC\5th_Semester\Course_3_Semester_Project\ProjectRepository_VSCode\RLProject\Notebooks\wandb\run-20201127_175651-3s4vfqb1\logs\debug-internal.log
+2020-11-27 17:56:51,596 INFO    MainThread:9928 [wandb_run.py:finish():912] finishing run sirbuster33/my-project/vctu0xkj
+2020-11-27 17:56:51,597 INFO    MainThread:9928 [wandb_init.py:_jupyter_teardown():234] cleaning up jupyter logic
+2020-11-27 17:56:51,597 INFO    MainThread:9928 [jupyter.py:save_history():208] not saving jupyter history
