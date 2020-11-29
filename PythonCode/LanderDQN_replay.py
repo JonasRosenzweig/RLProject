@@ -9,7 +9,7 @@ import time
 # import keras
 
 from keras import Sequential
-from keras.layers import Dense
+from keras.layers import Dense, Dropout
 from keras.activations import relu, linear
 from keras.optimizers import Adam
 from keras.losses import mean_squared_error
@@ -44,8 +44,13 @@ class DQN:
 
     def initialize_model(self):
         model = Sequential()
+        # The bigger the Dense layer, the higher the chance of overfitting.
         model.add(Dense(512, input_dim = self.observation_space_dim, activation=relu))
+        # Dropout 0.x: Randomly deactivate x*10% of the neurons
+        # Dropout will prevent overfitting, especially in Dense layers.
+        model.add(Dropout(0.2))
         model.add(Dense(256, activation=relu))
+        model.add(Dropout(0.2))
         model.add(Dense(self.action_space_dim, activation=linear))
         model.compile(loss=mean_squared_error, optimizer=Adam(lr=self.lr))
         print(model.summary())
