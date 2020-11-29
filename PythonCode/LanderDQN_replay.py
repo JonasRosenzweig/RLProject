@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import deque
+import wandb
+import keras
 
 from keras import Sequential
 from keras.layers import Dense
@@ -12,6 +14,9 @@ from keras.optimizers import Adam
 from keras.losses import mean_squared_error
 from keras.models import load_model
 
+
+        
+        
 
 class DQN:
     def __init__(self, env, lr, gamma, eps, eps_decay):
@@ -34,6 +39,8 @@ class DQN:
         self.counter = 0
         self.average_rewards = []
         self.average_rewards_trained = []
+        self.accuracy = tf.keras.metrics.CategoricalAccuracy()
+        
 
     def initialize_model(self):
         model = Sequential()
@@ -69,8 +76,10 @@ class DQN:
         target_vec = self.model.predict_on_batch(states)
         indexes = np.array([i for i in range(self.batch_size)])
         target_vec[[indexes], [actions]] = targets
+        
+        
 
-        self.model.fit(states, target_vec, epochs=1, verbose=0)
+        self.model.fit(states, target_vec, epochs=1, verbose=0])
 
     def get_attribues_from_sample(self, random_sample):
         states = np.array([i[0] for i in random_sample])
@@ -87,6 +96,7 @@ class DQN:
         return random_sample
 
     def train(self, episodes):
+        wandb.init(project="LanderDQN", name="Performance")
         for episode in range(episodes):
             steps = 1000
             state = env.reset()
@@ -116,14 +126,16 @@ class DQN:
                 break
             self.rewards.append(ep_reward)
             self.average_rewards.append(average_reward)
+            wandb.log({'reward': average_reward, 'last reward': reward, 'epsilon': self.eps}, step=episode)
             
-            print("Tr Ep: {}, Ep Reward: {:.2f}, Last Reward: {:.2f}, Total Frames: {}, Frames: {}, Avg Reward: {:.2f}, Eps: {:.2f}".format(episode,
-                                                                                                                                            ep_reward, 
-                                                                                                                                     reward, 
-                                                                                                                                     self.training_frame_count, 
-                                                                                                                                     episode_frame_count, 
-                                                                                                                                     average_reward,
-                                                                                                                                     self.eps))
+            print("Tr Ep: {}, Ep Reward: {:.2f}, Last Reward: {:.2f}, Total Frames: {}, Frames: {}, Avg Reward: {:.2f}, Eps: {:.2f},".format(episode,
+                                                                                                                                                     ep_reward, 
+                                                                                                                                                     reward, 
+                                                                                                                                                     self.training_frame_count, 
+                                                                                                                                                     episode_frame_count, 
+                                                                                                                                                     average_reward,
+                                                                                                                                                     self.eps,
+                                                                                                                                                     ))
             if episode % 9 == 0:
                 plt.plot(self.average_rewards)
                 plt.plot(self.rewards)
