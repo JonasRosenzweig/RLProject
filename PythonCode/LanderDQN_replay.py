@@ -15,15 +15,6 @@ from keras.losses import mean_squared_error
 from keras.models import load_model
 
 
-class LossHistory(keras.callbacks.Callback):
-    def on_train_begin(self, logs={}):
-        self.losses = []
-    def on_batch_end(self, batch, logs={}):
-        self.losses.append(logs.get('loss'))
-        
-class EpisodeLoss(keras.callbacks.Callback):
-    def on_batch_end(self, batch, logs={}):
-        return (logs.get('loss'))
         
         
 
@@ -48,8 +39,8 @@ class DQN:
         self.counter = 0
         self.average_rewards = []
         self.average_rewards_trained = []
-        self.history = LossHistory()
-        self.episode_loss = EpisodeLoss()
+        self.accuracy = tf.keras.metrics.CategoricalAccuracy()
+        
 
     def initialize_model(self):
         model = Sequential()
@@ -88,7 +79,7 @@ class DQN:
         
         
 
-        self.model.fit(states, target_vec, epochs=1, verbose=0, callbacks=[self.history])
+        self.model.fit(states, target_vec, epochs=1, verbose=0])
 
     def get_attribues_from_sample(self, random_sample):
         states = np.array([i[0] for i in random_sample])
