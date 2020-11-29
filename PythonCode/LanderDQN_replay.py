@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from collections import deque
 import wandb
+import time
 # import keras
 
 from keras import Sequential
@@ -14,8 +15,7 @@ from keras.optimizers import Adam
 from keras.losses import mean_squared_error
 from keras.models import load_model
 
-
-        
+name = "LunarLander_V2_DQN_ExpReplay_{}".format(int(time.time()))        
         
 
 class DQN:
@@ -208,7 +208,7 @@ if __name__ == '__main__':
     eps = 1.0
     eps_decay = 0.995
     gamma = 0.99
-    training_episodes = 200
+    training_episodes = 400
     model = DQN(env, lr, gamma, eps, eps_decay)
     model.train(training_episodes)
     model.save("replay_DQN_trained_model3.h5")
@@ -218,3 +218,7 @@ if __name__ == '__main__':
 
 
 
+
+
+
+        
