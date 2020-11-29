@@ -1,11 +1,11 @@
 import gym
 import random
-import pandas as pd
+# import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import deque
 import wandb
-import keras
+# import keras
 
 from keras import Sequential
 from keras.layers import Dense
@@ -39,7 +39,7 @@ class DQN:
         self.counter = 0
         self.average_rewards = []
         self.average_rewards_trained = []
-        self.accuracy = tf.keras.metrics.CategoricalAccuracy()
+        # self.accuracy = tf.keras.metrics.CategoricalAccuracy()
         
 
     def initialize_model(self):
@@ -79,7 +79,7 @@ class DQN:
         
         
 
-        self.model.fit(states, target_vec, epochs=1, verbose=0])
+        self.model.fit(states, target_vec, epochs=1, verbose=0)
 
     def get_attribues_from_sample(self, random_sample):
         states = np.array([i[0] for i in random_sample])
@@ -172,7 +172,7 @@ class DQN:
             observation_space_dim = env.observation_space.shape[0]
             trained_state = np.reshape(trained_state, [1, observation_space_dim])
             for step in range(steps):
-                #env.render()
+                env.render()
                 #time.sleep(0.0003)
                 trained_action = np.argmax(trained_model.predict(trained_state)[0])
                 next_state, reward, done, info = env.step(trained_action)
@@ -218,7 +218,3 @@ if __name__ == '__main__':
 
 
 
-
-
-
-        
