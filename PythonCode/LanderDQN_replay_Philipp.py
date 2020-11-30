@@ -20,10 +20,18 @@ import pickle
 import time
 
 import keras
+# Sequential NN model is the most common one.
 from keras import Sequential
-from keras import Activation, Flatten, MaxPooling2D, Dropout
+# Layers used for NNs: Conv2D is usually used for image recognition,
+# Dense is commonly used, but may be prone to overfitting.
 from keras.layers import Dense, Conv2D
+# Allows using functions such as flattening (when trying to change from Conv2D to Dense layer)
+# or MaxPooling, which is used in Conv2D layers.
+from keras import Activation, Flatten, MaxPooling2D, Dropout
+# Activation functions: relu (rectified linear) is standard in NN
+# linear is used for the final layer to get just one possible answer.
 from keras.activations import relu, linear
+# Standard optimizer is adam.
 from keras.optimizers import Adam
 from keras.losser import mean_squared_error
 from keras.models import load_model
@@ -68,4 +76,6 @@ class DQN:
         
         # Output layer
         model.add(Dense(self.num_action_space, activation = linear))
+        
+        
 
