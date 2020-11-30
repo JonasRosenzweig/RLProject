@@ -193,7 +193,7 @@ class DQN:
             if self.epsilon > self.epsilon_min:
                 self.epsilon *= self.epsilon_decay
             
-            
+            # Stop if the model has solved the environment (reward must average above 200).
             last_rewards_mean = np.mean(self.rewards_list[-100])
             if last_rewards_mean > 200 and can_stop:
                 print("DQN Training Complete...")
@@ -201,7 +201,16 @@ class DQN:
             
             # Print out the episode's results with information about the rewards.
             print(episode, "\t: Episode || Reward: ", reward_for_episode, "\t|| Average Reward: ", last_rewards_mean, "\t epsilon: ", self.epsilon)
-    
+            
+    def update_counter(self):
+        self.counter += 1
+        step_size = 5
+        self.counter = self.counter % step_size
+        
+    def save(self, name):
+        self.model.save(name)
+        
+        
         
         
         
