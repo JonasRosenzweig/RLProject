@@ -145,6 +145,62 @@ class DQN:
         random_sample = random.sample(self.replay_memory_buffer, self.batch_size)
         return random_sample
     
+    def train(self, num_episodes, can_stop = True):
+        
+        for episode in range(num_episodes):
+            
+            state = env.reset()
+            reward_for_episode = 0
+            num_steps = 1000
+            state = np.reshape(state, [1, self.num_observation_space])
+            
+            for step in range(num_steps):
+                
+                # env.render()
+                
+                # Decide what action to take.
+                received_action = self.get_action(state)
+                
+                # Make information tuple for the next state based on the retrieved action.
+                next_state, reward, done, info = env.step(received_action)
+                
+                # Update the next state based on the tuple and the observation space.
+                next_state = np.reshape(next_state, [1, self.num_observation_space])
+                
+                # Add the experience of the state-action pair to the replay memory
+                self.add_to_replay_memory(state, received_action, reward, next_state, done)
+                
+                # Add the reward for this step to the episode reward
+                reward_for_episode += reward
+                
+                # Progress to the next state by changing the current state to become the next state.
+                state = next_state
+                
+                # Update counter used in the replay memory buffer size check.
+                self.update_counter()
+                
+                # Update the weight connections within the layers.
+                self.learn_and_update_weights_by_reply()
+                
+                
+                if done:
+                    break
+                
+            # Add the episode reward to the list of rewards for the episodes    
+            self.rewards_list.append(reward_for_episode)
+            
+            # Reduce the epsilon based on decay rate to move the focus of the NN from exploration to exploitation over time. 
+            if self.epsilon > self.epsilon_min:
+                self.epsilon *= self.epsilon_decay
+            
+            
+            last_rewards_mean = np.mean(self.rewards_list[-100])
+            if last_rewards_mean > 200 and can_stop:
+                print("DQN Training Complete...")
+                break
+            
+            # Print out the episode's results with information about the rewards.
+            print(episode, "\t: Episode || Reward: ", reward_for_episode, "\t|| Average Reward: ", last_rewards_mean, "\t epsilon: ", self.epsilon)
     
         
         
