@@ -44,25 +44,29 @@ num_neurons = [32, 64, 128]
 class DQN:
     def __init__(self, env, lr, gamma, epsilon, epsilon_decay):
         
+        # Initializes variables based on the environment (e.g. LunarLander-V2, Cartpole-V0, etc.)
         self.env = env
         self.action_space = env.action_space
         self.observation_space = env.observation_space
-        self.counter = 0
+        self.num_action_space = self.action_space.n
+        self.num_observation_space = env.observation_space.shape[0]
         
+        # Initializes variables based on the hyperparameters given.
         self.lr = lr
         self.gamma = gamma
         self.epsilon = epsilon
         self.epsilon_decay = epsilon_decay
         self.rewards_list = []
         
+        # Initializes variables the same every time, as given below.
         self.replay_memory_buffer = deque(maxlen = 500_000)
         self.batch_size = 64
         self.epsilon_min = 0.01
-        self.num_action_space = self.action_space.n
-        self.num_observation_space = env.observation_space.shape[0]
+        self.counter = 0
         
         self.model = self.initialize_model()
         
+    # Constructs model using sequential model and different (deep) layers.
     def initialize_model(self):
         model = Sequential()
         
