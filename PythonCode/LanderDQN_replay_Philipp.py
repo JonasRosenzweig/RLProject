@@ -129,6 +129,26 @@ class DQN:
         # Adjusts the policy based on states, target vectors and other things (needs more understanding)
         self.model.fit(states, target_vec, epochs = 1, verbose = 0)
         
+    def get_attributes_from_sample(self, random_sample):
+        
+        states = np.array([i[0] for i in random_sample])
+        actions = np.array([i[1] for i in random_sample])
+        rewards = np.array([i[2] for i in random_sample])
+        next_states = np.array([i[3] for i in random_sample])
+        done_list = np.array([i[4] for i in random_sample])
+        states = np.squeeze(states)
+        next_states = np.squeeze(next_states)
+        
+        return np.squeeze(states), actions, rewards, next_states, done_list
+        
+    def get_random_sample_from_replay_mem(self):
+        random_sample = random.sample(self.replay_memory_buffer, self.batch_size)
+        return random_sample
+    
+    
+        
+        
+        
         
         
         
