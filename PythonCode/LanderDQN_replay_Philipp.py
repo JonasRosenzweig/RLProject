@@ -8,6 +8,7 @@ Created on Mon Nov 30 10:46:43 2020
 sources:
     https://pythonprogramming.net/convolutional-neural-network-deep-learning-python-tensorflow-keras/
     https://github.com/fakemonk1/Reinforcement-Learning-Lunar_Lander/blob/master/Lunar_Lander.py
+    Jonas' algorithm
 """
 
 
@@ -52,13 +53,20 @@ class DQN:
         self.observation_space = env.observation_space
         self.num_action_space = self.action_space.n
         self.num_observation_space = env.observation_space.shape[0]
+        self.episodes_rewards = []
+        self.average_episodes_rewards = []
+        self.trained_episodes_rewards = []
+        self.average_trained_episodes_rewards = []
+        
+        # Keep track of how many frames the model ran through in total and per episode.
+        self.training_total_frame_count = 0
+        self.episode_frame_count = 0
         
         # Initializes variables based on the hyperparameters given.
         self.lr = lr
         self.gamma = gamma
         self.epsilon = epsilon
         self.epsilon_decay = epsilon_decay
-        self.rewards_list = []
         
         # Initializes variables the same every time, as given below.
         self.replay_memory_buffer = deque(maxlen = 500_000)
@@ -114,16 +122,16 @@ class DQN:
             return
         
         # If the model has been completing the task with a desirable reward for a while, stop it to prevent it from overfitting.
-        if np.mean(self.rewards_list[-10]) > 180:
+        if np.mean(self.episodes_rewards[-10]) > 180:
             return
         
         # Choose a random past experience from the replay memory
         random_sample = self.get_randomo_sample_from_replay_mem()
         # Convert the chosen experience's attributes to the needed parameters (state, action, etc.)
-        states, actions, rewards, next_states, done_list = self.get_attributes_from_sample(random_sample)
+        states, actions, episodes_rewards, next_states, done_list = self.get_attributes_from_sample(random_sample)
         
-        # Update the rewards based on the discount factor (gamma) influencing the next set of states. (Needs revising / more understanding)
-        targets = rewards + self.gamma * (np.amax(self.model.predict_on_batch(next_states), axis = 1)) * (1 - done_list)
+        # Update the episodes_rewards based on the discount factor (gamma) influencing the next set of states. (Needs revising / more understanding)
+        targets = episodes_rewards + self.gamma * (np.amax(self.model.predict_on_batch(next_states), axis = 1)) * (1 - done_list)
         target_vec = self.model.predict_on_batch(states)
         indexes = np.array([i for i in range(self.batch_size)])
         target_vec[[indexes], [actions]] = targets
@@ -135,13 +143,13 @@ class DQN:
         
         states = np.array([i[0] for i in random_sample])
         actions = np.array([i[1] for i in random_sample])
-        rewards = np.array([i[2] for i in random_sample])
+        episodes_rewards = np.array([i[2] for i in random_sample])
         next_states = np.array([i[3] for i in random_sample])
         done_list = np.array([i[4] for i in random_sample])
         states = np.squeeze(states)
         next_states = np.squeeze(next_states)
         
-        return np.squeeze(states), actions, rewards, next_states, done_list
+        return np.squeeze(states), actions, episodes_rewards, next_states, done_list
         
     def get_random_sample_from_replay_mem(self):
         random_sample = random.sample(self.replay_memory_buffer, self.batch_size)
@@ -152,7 +160,8 @@ class DQN:
         for episode in range(num_episodes):
             
             state = env.reset()
-            reward_for_episode = 0
+            episode_reward = 0
+            episode_frame_count = 0
             num_steps = 1000
             state = np.reshape(state, [1, self.num_observation_space])
             
@@ -173,7 +182,7 @@ class DQN:
                 self.add_to_replay_memory(state, received_action, reward, next_state, done)
                 
                 # Add the reward for this step to the episode reward
-                reward_for_episode += reward
+                episode_reward += reward
                 
                 # Progress to the next state by changing the current state to become the next state.
                 state = next_state
@@ -184,25 +193,30 @@ class DQN:
                 # Update the weight connections within the layers.
                 self.learn_and_update_weights_by_reply()
                 
+                self.training_total_frame_count += 1
+                self.episode_frame_count += 1
+                
                 
                 if done:
                     break
                 
-            # Add the episode reward to the list of rewards for the episodes    
-            self.rewards_list.append(reward_for_episode)
+            # Add the episode reward to the list of episodes_rewards for the episodes    
+            self.episodes_rewards.append(episode_reward)
             
             # Reduce the epsilon based on decay rate to move the focus of the NN from exploration to exploitation over time. 
             if self.epsilon > self.epsilon_min:
                 self.epsilon *= self.epsilon_decay
             
             # Stop if the model has solved the environment (reward must average above 200).
-            last_rewards_mean = np.mean(self.rewards_list[-100])
-            if last_rewards_mean > 200:
+            self.average_episodes_rewards = np.mean(self.episodes_rewards[-100])
+            if self.average_episodes_rewards > 200:
                 print("DQN Training Complete...")
                 break
             
-            # Print out the episode's results with information about the rewards.
-            print(episode, "\t: Episode || Reward: ", reward_for_episode, "\t|| Average Reward: ", last_rewards_mean, "\t epsilon: ", self.epsilon)
+            # Print out the episode's results with additional information.
+            print("\t: Episode: ", episode, "\t Episode Reward:", episode_reward,
+                  "\n\t|| Last frame Reward: ", reward, "\t|| Average Reward: ", self.average_episodes_rewards, "\t|| Epsilon: ", self.epsilon,
+                  "\n\t Total Frames trained: ", self.training_total_frame_count, "\t|| Frames this episode: ", episode_frame_count)
             
     def update_counter(self):
         self.counter += 1
@@ -216,7 +230,7 @@ class DQN:
 # Makes a validation run of a trained model, which is very similar to a training run.
 def test_trained_model(self, trained_model, num_episodes):
     
-    rewards_list = []
+    # episodes_rewards_list = []
     print("Start validation run of trained model:")
     
     num_steps = 1000
@@ -225,7 +239,7 @@ def test_trained_model(self, trained_model, num_episodes):
         current_state = env.reset()
         num_observation_space = env.observation_space.shape[0]
         current_state = np.reshape(current_state, [1, num_observation_space])
-        reward_for_episode = 0
+        episode_reward = 0
         
         for step in range(num_steps):
             env.render()
@@ -233,16 +247,27 @@ def test_trained_model(self, trained_model, num_episodes):
             new_state, reward, done, info = env.step(selected_action)
             new_state = np.reshape(new_state, [1, num_observation_space])
             current_state = new_state
-            reward_for_episode += reward
+            episode_reward += reward
             
             if done:
                 break
         
-        rewards_list.append(reward_for_episode)
-        print(episode, "\t: Episode || Reward: ", reward_for_episode)
+        average_trained_episodes_rewards = np.mean(self.trained_episodes_rewards[-100:])
+        self.trained_episodes_rewards.append(episode_reward)
         
-    return rewards_list
-
+        print("Episode: {}, Reward: {:.2f}, Last Reward: {:.2f}, Average Reward: {:.2f}".format(episode,
+                                                                                             episode_reward, 
+                                                                                             reward, 
+                                                                                             average_trained_episodes_rewards))
+        
+    # return episodes_rewards_list
+    env.close()
+    plt.plot(self.average_trained_episodes_rewards)
+    plt.plot(self.trained_episodes_rewards)
+    plt.title("DQN Replay Trained Performance Curve")
+    plt.xlabel("Episode")
+    plt.ylabel("Rewards")
+    plt.show()
 
         
 if __name__ == '__main__':
@@ -272,7 +297,7 @@ if __name__ == '__main__':
     #         model.train(training_episodes)
             
     #         # Continuously train the model until it reaches the target average reward.
-    #         while (np.mean(model.rewards[-10:]) < 180):
+    #         while (np.mean(model.episodes_rewards[-10:]) < 180):
     #             model.train(training_episodes)
     #         model.save(name)
             
@@ -281,12 +306,12 @@ if __name__ == '__main__':
     model = DQN(env, lr, gamma, eps, eps_decay)
     model.train(training_episodes)
     # Continuously train the model until it reaches the target average reward.
-    while (np.mean(model.rewards[-10:]) < 180):
+    while (np.mean(model.episodes_rewards[-10:]) < 180):
         model.train(training_episodes)
     
     
     # trained_model = load_model("replay_DQN_trained_model3.h5")
-    model.test_trained_model(trained_model, num_episodes=30)
+    # model.test_trained_model(trained_model, num_episodes=30)
 
     
     
