@@ -11,6 +11,7 @@ sources:
 """
 
 
+# Import the gym environment from OpenAI
 import gym
 import random
 import numpy as np
@@ -145,7 +146,7 @@ class DQN:
         random_sample = random.sample(self.replay_memory_buffer, self.batch_size)
         return random_sample
     
-    def train(self, num_episodes, can_stop = True):
+    def train(self, num_episodes):
         
         for episode in range(num_episodes):
             
@@ -195,7 +196,7 @@ class DQN:
             
             # Stop if the model has solved the environment (reward must average above 200).
             last_rewards_mean = np.mean(self.rewards_list[-100])
-            if last_rewards_mean > 200 and can_stop:
+            if last_rewards_mean > 200:
                 print("DQN Training Complete...")
                 break
             
@@ -209,11 +210,70 @@ class DQN:
         
     def save(self, name):
         self.model.save(name)
+    
+
+# Makes a validation run of a trained model, which is very similar to a training run.
+def test_trained_model(self, num_episodes):
+    
+    rewards_list = []
+    print("Start validation run of trained model:")
+    
+    num_steps = 1000
+    
+    for episode in range(num_episodes):
+        current_state = env.reset()
+        num_observation_space = env.observation_space.shape[0]
+        current_state = np.reshape(current_state, [1, num_observation_space])
+        reward_for_episode = 0
         
+        for step in range(num_steps):
+            env.render()
+            selected_action = np.argmax(self.predict(current_state)[0])
+            new_state, reward, done, info = env.step(selected_action)
+            new_state = np.reshape(new_state, [1, num_observation_space])
+            current_state = new_state
+            reward_for_episode += reward
+            
+            if done:
+                break
         
+        rewards_list.append(reward_for_episode)
+        print(episode, "\t: Episode || Reward: ", reward_for_episode)
         
+    return rewards_list
+
+
         
-        
+if __name__ == '__main__':
+
+    # Create one of the environments from OpenAI
+    env = gym.make("LunarLander-v2")
+    
+    # Create random seeds (Elaborate on what this does.)
+    env.seed(21)
+    np.random.seed(21)
+    
+    # Initialize hyper-parameters
+    lr = 0.001
+    eps = 1.0
+    eps_decay = 0.995
+    gamma = 0.99
+    training_episodes = 200
+    
+    model = DQN(env, lr, gamma, eps, eps_decay)
+    
+    for deep_dense_layers in deep_dense_layers:
+        for num_neurons in num_neurons:
+            print(deep_dense_layers)
+    
+    model.train(training_episodes)
+    
+    # Continuously train the model until it reaches the target average reward.
+    while (np.mean(model.rewards[-10:]) < 180):
+        model.train(training_episodes)
+    
+    
+    
         
         
         
