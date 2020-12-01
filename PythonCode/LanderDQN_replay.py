@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Nov 29 11:21:00 2020
+
+@author: Kata
+"""
 import gym
 import random
 # import pandas as pd
@@ -48,9 +54,9 @@ class DQN:
         model.add(Dense(512, input_dim = self.observation_space_dim, activation=relu))
         # Dropout 0.x: Randomly deactivate x*10% of the neurons
         # Dropout will prevent overfitting, especially in Dense layers.
-        model.add(Dropout(0.2))
+        # model.add(Dropout(0.2))
         model.add(Dense(256, activation=relu))
-        model.add(Dropout(0.2))
+        # model.add(Dropout(0.2))
         model.add(Dense(self.action_space_dim, activation=linear))
         model.compile(loss=mean_squared_error, optimizer=Adam(lr=self.lr))
         print(model.summary())
@@ -141,7 +147,7 @@ class DQN:
                                                                                                                                                      average_reward,
                                                                                                                                                      self.eps,
                                                                                                                                                      ))
-            if episode % 9 == 0:
+            if episode % 10 == 0:
                 plt.plot(self.average_rewards)
                 plt.plot(self.rewards)
                 plt.title("DQN Replay Training Performance Curve")
@@ -213,10 +219,15 @@ if __name__ == '__main__':
     eps = 1.0
     eps_decay = 0.995
     gamma = 0.99
-    training_episodes = 400
+    training_episodes = 200
     model = DQN(env, lr, gamma, eps, eps_decay)
     model.train(training_episodes)
-    model.save("replay_DQN_trained_model3.h5")
+    # training_episodes = 100
+    while (np.mean(model.rewards[-10:]) < 180):
+        model.train(training_episodes)
+    model.save(name)
+    model.save("Dropout_replay_DQN_trained_model3.h5")
+    # Dropout_replay_DQN_trained_model3.h5
     trained_model = load_model("replay_DQN_trained_model3.h5")
     model.test_trained_model(trained_model, num_episodes=30)
 

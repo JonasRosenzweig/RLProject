@@ -26,8 +26,9 @@ from keras import Sequential
 # Layers used for NNs: Conv2D is usually used for image recognition,
 # Dense is commonly used, but may be prone to overfitting.
 from keras.layers import Dense, Conv2D
-# Allows using functions such as flattening (when trying to change from Conv2D to Dense layer)
+# Allows using functions such as Flatten* (when trying to change from Conv2D to Dense layer)
 # or MaxPooling, which is used in Conv2D layers.
+# * Flatten converts 3D feature maps (Conv2D) into 1D feature vectors
 from keras import Activation, Flatten, MaxPooling2D, Dropout
 # Activation functions: relu (rectified linear) is standard in NN
 # linear is used for the final layer to get just one possible answer.
@@ -213,7 +214,7 @@ class DQN:
     
 
 # Makes a validation run of a trained model, which is very similar to a training run.
-def test_trained_model(self, num_episodes):
+def test_trained_model(self, trained_model, num_episodes):
     
     rewards_list = []
     print("Start validation run of trained model:")
@@ -228,7 +229,7 @@ def test_trained_model(self, num_episodes):
         
         for step in range(num_steps):
             env.render()
-            selected_action = np.argmax(self.predict(current_state)[0])
+            selected_action = np.argmax(trained_model.predict(current_state)[0])
             new_state, reward, done, info = env.step(selected_action)
             new_state = np.reshape(new_state, [1, num_observation_space])
             current_state = new_state
@@ -248,6 +249,7 @@ if __name__ == '__main__':
 
     # Create one of the environments from OpenAI
     env = gym.make("LunarLander-v2")
+    env.reset
     
     # Create random seeds (Elaborate on what this does.)
     env.seed(21)
@@ -262,15 +264,31 @@ if __name__ == '__main__':
     
     model = DQN(env, lr, gamma, eps, eps_decay)
     
-    for deep_dense_layers in deep_dense_layers:
-        for num_neurons in num_neurons:
-            print(deep_dense_layers)
+    # Allows for comparison between different models.
+    # for deep_dense_layer in deep_dense_layers:
+    #     for num_neuron in num_neurons:
+    #         name = "{}_Dense_Layers-{}_neurons-Timestamp_{}".format(deep_dense_layer, num_neuron, int(time.time()))
+    #         print("Training model: " + name)
+    #         model.train(training_episodes)
+            
+    #         # Continuously train the model until it reaches the target average reward.
+    #         while (np.mean(model.rewards[-10:]) < 180):
+    #             model.train(training_episodes)
+    #         model.save(name)
+            
     
+    
+    model = DQN(env, lr, gamma, eps, eps_decay)
     model.train(training_episodes)
-    
     # Continuously train the model until it reaches the target average reward.
     while (np.mean(model.rewards[-10:]) < 180):
         model.train(training_episodes)
+    
+    
+    # trained_model = load_model("replay_DQN_trained_model3.h5")
+    model.test_trained_model(trained_model, num_episodes=30)
+
+    
     
     
     
