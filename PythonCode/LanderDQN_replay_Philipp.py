@@ -40,12 +40,12 @@ from keras.losser import mean_squared_error
 from keras.models import load_model
 
 # Using these parameters in nested loops would allow for creating different combinations of NNs and find the best combination
-deep_dense_layers = [1, 2, 3]
+num_deep_layers = [1, 2, 3]
 num_neurons = [32, 64, 128]
 
 
 class DQN:
-    def __init__(self, env, lr, gamma, epsilon, epsilon_decay):
+    def __init__(self, env, lr, gamma, epsilon, epsilon_decay, deep_layers, neurons):
         
         # Initializes variables based on the environment (e.g. LunarLander-V2, Cartpole-V0, etc.)
         self.env = env
@@ -74,20 +74,34 @@ class DQN:
         self.epsilon_min = 0.01
         self.counter = 0
         
+        self.deep_layers = deep_layers
+        self.neurons = neurons
+        self.name = "{}_Deep_Layers-{}_Neurons-Timestamp_{}".format(self.deep_layers, self.neurons, int(time.time()))
+        
+        
         self.model = self.initialize_model()
         
+        
+    
+    def add_deep_layers(self):
+        for i in range(self.deep_layers):
+            model.add(Dense(self.neurons, activation = relu))
+        
+        
+
     # Constructs model using sequential model and different (deep) layers.
     def initialize_model(self):
         model = Sequential()
         
         
         # Input layer (based on observation space of the environment)
-        model.add(Dense(512, input_dim = self.num_observation_space, activation = relu))
-        model.add(Dropout(0.2))
+        model.add(Dense(2*self.neurons, input_dim = self.num_observation_space, activation = relu))
+        # model.add(Dropout(0.2))
         
         # Deep layers
-        model.add(Dense(256, activation = relu))
-        model.add(Dropout(0.1))
+        # model.add(Dense(256, activation = relu))
+        self.add_deep_layers()
+        # model.add(Dropout(0.1))
         
         # Output layer (based on action space of the environment)
         model.add(Dense(self.num_action_space, activation = linear))
@@ -139,6 +153,10 @@ class DQN:
         # Adjusts the policy based on states, target vectors and other things (needs more understanding)
         self.model.fit(states, target_vec, epochs = 1, verbose = 0)
         
+    def get_random_sample_from_replay_mem(self):
+        random_sample = random.sample(self.replay_memory_buffer, self.batch_size)
+        return random_sample
+        
     def get_attributes_from_sample(self, random_sample):
         
         states = np.array([i[0] for i in random_sample])
@@ -150,10 +168,7 @@ class DQN:
         next_states = np.squeeze(next_states)
         
         return np.squeeze(states), actions, episodes_rewards, next_states, done_list
-        
-    def get_random_sample_from_replay_mem(self):
-        random_sample = random.sample(self.replay_memory_buffer, self.batch_size)
-        return random_sample
+     
     
     def train(self, num_episodes):
         
@@ -172,7 +187,7 @@ class DQN:
                 # Decide what action to take.
                 received_action = self.get_action(state)
                 
-                # Make information tuple for the next state based on the retrieved action.
+                # Step to next environment state with current environment state tuple.
                 next_state, reward, done, info = env.step(received_action)
                 
                 # Update the next state based on the tuple and the observation space.
@@ -217,7 +232,8 @@ class DQN:
             print("\t: Episode: ", episode, "\t Episode Reward:", episode_reward,
                   "\n\t|| Last frame Reward: ", reward, "\t|| Average Reward: ", self.average_episodes_rewards, "\t|| Epsilon: ", self.epsilon,
                   "\n\t Total Frames trained: ", self.training_total_frame_count, "\t|| Frames this episode: ", episode_frame_count)
-            
+    
+    # Counter used for experience replay.
     def update_counter(self):
         self.counter += 1
         step_size = 5
@@ -287,13 +303,14 @@ if __name__ == '__main__':
     gamma = 0.99
     training_episodes = 200
     
-    model = DQN(env, lr, gamma, eps, eps_decay)
     
     # Allows for comparison between different models.
-    # for deep_dense_layer in deep_dense_layers:
-    #     for num_neuron in num_neurons:
-    #         name = "{}_Dense_Layers-{}_neurons-Timestamp_{}".format(deep_dense_layer, num_neuron, int(time.time()))
-    #         print("Training model: " + name)
+    for deep_layers in num_deep_layers:
+        for neurons in num_neurons:
+            name = "{}_Deep_Layers-{}_Neurons-Timestamp_{}".format(deep_layers, neurons, int(time.time()))
+            # print("Training model: " + name)
+            # print(model.summary())
+            model = DQN(env, lr, gamma, eps, eps_decay, deep_layers, neurons)
     #         model.train(training_episodes)
             
     #         # Continuously train the model until it reaches the target average reward.
