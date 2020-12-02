@@ -1,6 +1,7 @@
 import gym
 import math
-
+import random
+import time
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -64,7 +65,7 @@ for n in range(num_runs):
             
     total_reward = 0
     done = False
-    i = 0
+    #i = 0
     
     while not done:
         # Choose action according to greedy policy and take it
@@ -74,7 +75,7 @@ for n in range(num_runs):
         # Update Q-Table
         agent.update_q(discretized_state, action, reward, next_state, alpha)
         discretized_state = next_state
-        i += 1
+        #i += 1
         # env.render()
         total_reward += reward
         # time.sleep(0.03)

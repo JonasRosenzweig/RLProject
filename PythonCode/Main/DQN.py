@@ -91,7 +91,7 @@ class DQNAgent(RLAgent):
         self.model.fit(states, target_vec, epochs=1, verbose=0)
         
     def train(self):
-        wandb.init(project="LanderDQN", name="Performance")
+        wandb.init(project="DQN", name="Performance")
         for episode in range(self.training_episodes):
             steps = self.frames
             state = self.env.reset()
