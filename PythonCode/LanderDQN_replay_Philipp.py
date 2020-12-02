@@ -135,8 +135,10 @@ class DQN:
             return
         
         # If the model has been completing the task with a desirable reward for a while, stop it to prevent it from overfitting.
-        # if np.mean(self.episodes_rewards[-10]) > 180:
-        #     return
+        if len(self.episodes_rewards) > 10:
+            if np.mean(self.episodes_rewards[-10]) > 180:
+                return
+        
         
         # Choose a random past experience from the replay memory
         random_sample = self.get_random_sample_from_replay_mem()
@@ -225,10 +227,13 @@ class DQN:
                 self.epsilon *= self.epsilon_decay
             
             # Stop if the model has solved the environment (reward must average above 200).
-            self.average_episodes_rewards = np.mean(self.episodes_rewards)
-            # if self.average_episodes_rewards > 200:
-            #     print("DQN Training Complete...")
-            #     break
+            if len(self.episodes_rewards) > 100:
+                self.average_episodes_rewards = np.mean(self.episodes_rewards[-100])
+            else:
+                self.average_episodes_rewards = np.mean(self.episodes_rewards)
+            if self.average_episodes_rewards > 200:
+                print("DQN Training Complete...")
+                break
             
             # Print out the episode's results with additional information.
             print("""Episode: {}\t\t|| Episode Reward: {:.2f}
@@ -242,7 +247,7 @@ Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
             #       "\nTotal Frames trained: ", self.training_total_frame_count, "\t|| Frames this episode: ", self.episode_frame_count)
     
             
-            if episode % 10 == 0:
+            if episode % 50 == 0:
                 plt.plot(self.average_episodes_rewards)
                 plt.plot(self.episodes_rewards)
                 title = "DQN Training Curve: \n"
@@ -298,7 +303,10 @@ def test_trained_model(self, trained_model, num_episodes):
             if done:
                 break
         
-        average_trained_episodes_rewards = np.mean(self.trained_episodes_rewards[-100:])
+        if len(self.trained_episodes_rewards) > 100:
+            average_trained_episodes_rewards = np.mean(self.trained_episodes_rewards[-100:])
+        else:
+            average_trained_episodes_rewards = np.mean(self.trained_episodes_rewards)
         self.trained_episodes_rewards.append(episode_reward)
         
         print("Episode: {}, Reward: {:.2f}, Last Reward: {:.2f}, Average Reward: {:.2f}".format(episode,
@@ -333,7 +341,7 @@ if __name__ == '__main__':
     eps = 1.0
     eps_decay = 0.995
     gamma = 0.99
-    training_episodes = 20
+    training_episodes = 201
     
     
     # Allows for comparison between different models.
