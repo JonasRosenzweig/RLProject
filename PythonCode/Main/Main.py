@@ -23,7 +23,8 @@ if __name__ == '__main__':
     input_layer_mult = 2
     memory_size = 100_000
     batch_size = 64
-    model = DQNAgent(env, learning_rate, gamma, epsilon, epsilon_decay, epsilon_min, deep_layers, neurons, input_layer_mult, memory_size, batch_size, training_episodes, testing_episodes, frames)
+    model = DQNAgent(env, learning_rate, gamma, epsilon, epsilon_decay, epsilon_min, deep_layers, neurons, 
+                     input_layer_mult, memory_size, batch_size, training_episodes, testing_episodes, frames)
     model.train()
     #while (np.mean(model.rewards[-10:]) < 180):
     #    model.train()

@@ -16,7 +16,8 @@ from keras.losses import mean_squared_error
 
 
 class DQNAgent(RLAgent):
-    def __init__(self, env, learning_rate, gamma, epsilon, epsilon_decay, epsilon_min, deep_layers, neurons, input_layer_mult, memory_size, batch_size, training_episodes, testing_episodes, frames):
+    def __init__(self, env, learning_rate, gamma, epsilon, epsilon_decay, epsilon_min, 
+                 deep_layers, neurons, input_layer_mult, memory_size, batch_size, training_episodes, testing_episodes, frames):
         RLAgent.__init__(self, env, training_episodes, testing_episodes, frames)
         
         self.learning_rate = learning_rate
@@ -44,7 +45,8 @@ class DQNAgent(RLAgent):
     def initialize_model(self):
         model = Sequential()
         model.add(Dense(self.neurons*self.input_layer_mult, input_dim = self.observation_space_dim, activation=relu))
-        model.add(Dense(self.neurons, activation=relu))
+        for i in range(self.deep_layers):
+            model.add(Dense(self.neurons, activation=relu))
         model.add(Dense(self.action_space_dim, activation=linear))
         model.compile(loss=mean_squared_error, optimizer=Adam(lr=self.learning_rate))
         print(model.summary())
