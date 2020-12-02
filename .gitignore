@@ -2,3 +2,5 @@
 .vscode/launch.json
 wandb
 
+PythonCode/__pycache__/RLAgent.cpython-38.pyc
+PythonCode/__pycache__/DQN.cpython-38.pyc
