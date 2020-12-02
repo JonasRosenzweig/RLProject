@@ -4,10 +4,12 @@ import numpy as np
 
 from DQN import DQNAgent
 from QLearning import QAgent
+from keras.models import load_model
 
 
 
 if __name__ == '__main__':
+    
     env = gym.make('LunarLander-v2')
     env.seed(21)
     np.random.seed(21)
@@ -24,20 +26,21 @@ if __name__ == '__main__':
     input_layer_mult = 2
     memory_size = 100_000
     batch_size = 64
-    #model = DQNAgent(env, learning_rate, gamma, epsilon, epsilon_decay, epsilon_min, deep_layers, neurons, 
-    #                input_layer_mult, memory_size, batch_size, training_episodes, testing_episodes, frames)
-    #model.train()
-    #while (np.mean(model.rewards[-10:]) < 180):
-    #    model.train()
-    #model.save("Dropout_replay_DQN_trained_model3.h5")
-    # Dropout_replay_DQN_trained_model3.h5
-    #trained_model = load_model("replay_DQN_trained_model3.h5")
-    #model.test_trained_model(trained_model, num_episodes=30)
-    #buckets = (3, 3, 6, 6,)
+    model = DQNAgent(env, learning_rate, gamma, epsilon, epsilon_decay, epsilon_min, deep_layers, neurons, 
+                    input_layer_mult, memory_size, batch_size, training_episodes, testing_episodes, frames)
+    model.train()
+    while (np.mean(model.rewards[-10:]) < 180):
+        model.train()
+    model.save("replay_DQN_trained_model5.h5")
+    trained_model = load_model("replay_DQN_trained_model3.h5")
+    model.test_trained_model(trained_model, num_episodes=30)
     
-    min_learning_rate = 0.1
-    divisor = 20
-    buckets = (3,3,6,6,)
-    model = QAgent(env, gamma, min_learning_rate, epsilon_min, divisor, buckets, training_episodes, testing_episodes, frames)
     
-    model.run()
+    # QLearning Cartpole:
+    # env = gym.make('CartPole-v0')
+    # buckets = (3, 3, 6, 6,)
+    # min_learning_rate = 0.1
+    # divisor = 20
+    # buckets = (3,3,6,6,)
+    # model = QAgent(env, gamma, min_learning_rate, epsilon_min, divisor, buckets, training_episodes, testing_episodes, frames)
+    # model.run()
