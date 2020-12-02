@@ -5,7 +5,7 @@ Created on Mon Nov 30 10:46:43 2020
 @author: Kata
 """
 """
-sources:
+Inspired by:
     https://pythonprogramming.net/convolutional-neural-network-deep-learning-python-tensorflow-keras/
     https://github.com/fakemonk1/Reinforcement-Learning-Lunar_Lander/blob/master/Lunar_Lander.py
     Jonas' algorithm
@@ -18,10 +18,8 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import deque
-import pickle
 import time
 
-import keras
 # Sequential NN model is the most common one.
 from keras import Sequential
 # Layers used for NNs: Conv2D is usually used for image recognition,
@@ -58,9 +56,8 @@ class DQN:
         self.trained_episodes_rewards = []
         self.average_trained_episodes_rewards = []
         
-        # Keep track of how many frames the model ran through in total and per episode.
+        # Keep track of how many frames the model ran through in total.
         self.training_total_frame_count = 0
-        self.episode_frame_count = 0
         
         # Initializes variables based on the hyperparameters given.
         self.lr = lr
@@ -74,6 +71,7 @@ class DQN:
         self.epsilon_min = 0.01
         self.counter = 0
         
+        # Enables initalising NNs with multiple deep layers at varying size.
         self.deep_layers = deep_layers
         self.neurons = neurons
         self.name = "{}_Deep_Layers-{}_Neurons-Timestamp_{}".format(self.deep_layers, self.neurons, int(time.time()))
@@ -96,10 +94,8 @@ class DQN:
         # model.add(Dropout(0.2))
         
         # Deep layers
-        # model.add(Dense(256, activation = relu))
         for i in range(self.deep_layers):
             model.add(Dense(self.neurons, activation = relu))
-        # model.add(Dropout(0.1))
         
         # Output layer (based on action space of the environment)
         model.add(Dense(self.num_action_space, activation = linear))
@@ -139,9 +135,8 @@ class DQN:
             if np.mean(self.episodes_rewards[-10]) > 180:
                 return
         
-        
-        # Choose a random past experience from the replay memory
         random_sample = self.get_random_sample_from_replay_mem()
+        
         # Convert the chosen experience's attributes to the needed parameters (state, action, etc.)
         states, actions, episodes_rewards, next_states, done_list = self.get_attributes_from_sample(random_sample)
         
@@ -157,6 +152,7 @@ class DQN:
     def add_to_replay_memory(self, state, received_action, reward, next_state, done):
         self.replay_memory_buffer.append((state, received_action, reward, next_state, done))
     
+    # Choose a random past experience from the replay memory
     def get_random_sample_from_replay_mem(self):
         random_sample = random.sample(self.replay_memory_buffer, self.batch_size)
         return random_sample
@@ -180,7 +176,7 @@ class DQN:
             
             state = env.reset()
             episode_reward = 0
-            self.episode_frame_count = 0
+            episode_frame_count = 0
             num_steps = 1000
             state = np.reshape(state, [1, self.num_observation_space])
             
@@ -213,7 +209,7 @@ class DQN:
                 self.learn_and_update_weights_by_reply()
                 
                 self.training_total_frame_count += 1
-                self.episode_frame_count += 1
+                episode_frame_count += 1
                 
                 
                 if done:
@@ -236,23 +232,23 @@ class DQN:
                 break
             
             # Print out the episode's results with additional information.
-            print("""Episode: {}\t\t|| Episode Reward: {:.2f}
+            print("""Episode: {}\t\t\t|| Episode Reward: {:.2f}
 Last Frame Reward: {:.2f}\t|| Average Reward: {:.2f}\t|| Epsilon: {:.2f}
 Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
                   .format(episode, episode_reward, reward, self.average_episodes_rewards, 
-                          self.epsilon, self.episode_frame_count, 
+                          self.epsilon, episode_frame_count, 
                           self.training_total_frame_count))
             # print("Episode: ", episode, "\t\t\t\t\t|| Episode Reward:", episode_reward,
             #       "\nLast frame Reward: ", reward, "\t\t|| Average Reward: ", self.average_episodes_rewards, "\t|| Epsilon: ", self.epsilon,
-            #       "\nTotal Frames trained: ", self.training_total_frame_count, "\t|| Frames this episode: ", self.episode_frame_count)
+            #       "\nTotal Frames trained: ", self.training_total_frame_count, "\t|| Frames this episode: ", episode_frame_count)
     
             
             if episode % 50 == 0:
                 plt.plot(self.average_episodes_rewards)
                 plt.plot(self.episodes_rewards)
                 title = "DQN Training Curve: \n"
-                title += name
-                plt.title(name)
+                title += self.name
+                plt.title(self.name)
                 plt.xlabel("Episode")
                 plt.ylabel("Rewards")
                 plt.show()
@@ -260,7 +256,7 @@ Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
                 
         env.close()
         figname = "Figure_"
-        figname += name
+        figname += self.name
         plt.savefig(figname)
     
     
@@ -274,8 +270,8 @@ Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
         step_size = 5
         self.counter = self.counter % step_size
         
-    def save(self, name):
-        self.model.save(name)
+    def save(self):
+        self.model.save(self.name)
     
 
 # Makes a validation run of a trained model, which is very similar to a training run.
@@ -309,17 +305,16 @@ def test_trained_model(self, trained_model, num_episodes):
             average_trained_episodes_rewards = np.mean(self.trained_episodes_rewards)
         self.trained_episodes_rewards.append(episode_reward)
         
-        print("Episode: {}, Reward: {:.2f}, Last Reward: {:.2f}, Average Reward: {:.2f}".format(episode,
-                                                                                             episode_reward, 
-                                                                                             reward, 
-                                                                                             average_trained_episodes_rewards))
+        print("""Episode: {}\t\t\t|| Episode Reward: {:.2f}\
+Last Frame Reward: {:.2f}\t|| Average Reward: {:.2f}"""
+              .format(episode, episode_reward, reward, average_trained_episodes_rewards))
         
     # return episodes_rewards_list
     env.close()
     plt.plot(self.average_trained_episodes_rewards)
     plt.plot(self.trained_episodes_rewards)
     title = "Testing for trained DQN: \n"
-    title += name
+    title += self.name
     plt.title(title)
     plt.xlabel("Episode")
     plt.ylabel("Rewards")
@@ -347,7 +342,7 @@ if __name__ == '__main__':
     # Allows for comparison between different models.
     for deep_layers in num_deep_layers:
         for neurons in num_neurons:
-            name = "{}_Deep_Layers-{}_Neurons-Timestamp_{}".format(deep_layers, neurons, int(time.time()))
+            # name = "{}_Deep_Layers_{}_Neurons_Timestamp_{}".format(deep_layers, neurons, int(time.time()))
             # print("Training model: " + name)
             # print(model.summary())
             model = DQN(env, lr, gamma, eps, eps_decay, deep_layers, neurons)
