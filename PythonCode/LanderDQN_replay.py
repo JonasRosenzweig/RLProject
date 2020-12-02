@@ -1,21 +1,16 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Nov 29 11:21:00 2020
 
-@author: Kata
-"""
 import gym
 import random
-# import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import deque
 import wandb
 import time
-# import keras
+
 
 from keras import Sequential
-from keras.layers import Dense, Dropout
+from keras.layers import Dense
 from keras.activations import relu, linear
 from keras.optimizers import Adam
 from keras.losses import mean_squared_error
