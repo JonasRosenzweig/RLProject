@@ -30,13 +30,13 @@ from keras.layers import Dense, Conv2D
 # Allows using functions such as Flatten* (when trying to change from Conv2D to Dense layer)
 # or MaxPooling, which is used in Conv2D layers.
 # * Flatten converts 3D feature maps (Conv2D) into 1D feature vectors
-from keras import Activation, Flatten, MaxPooling2D, Dropout
+# from keras import Flatten, MaxPooling2D, Dropout
 # Activation functions: relu (rectified linear) is standard in NN
 # linear is used for the final layer to get just one possible answer.
 from keras.activations import relu, linear
 # Standard optimizer is adam.
 from keras.optimizers import Adam
-from keras.losser import mean_squared_error
+from keras.losses import mean_squared_error
 from keras.models import load_model
 
 # Using these parameters in nested loops would allow for creating different combinations of NNs and find the best combination
@@ -83,9 +83,6 @@ class DQN:
         
         
     
-    def add_deep_layers(self):
-        for i in range(self.deep_layers):
-            model.add(Dense(self.neurons, activation = relu))
         
         
 
@@ -100,7 +97,8 @@ class DQN:
         
         # Deep layers
         # model.add(Dense(256, activation = relu))
-        self.add_deep_layers()
+        for i in range(self.deep_layers):
+            model.add(Dense(self.neurons, activation = relu))
         # model.add(Dropout(0.1))
         
         # Output layer (based on action space of the environment)
@@ -111,6 +109,7 @@ class DQN:
         model.compile(loss = mean_squared_error, optimizer = Adam (lr = self.lr))
         
         # Prints out the stats of the model to give an overview over what was just created.
+        print(self.name)
         print(model.summary())
         
         
@@ -152,7 +151,10 @@ class DQN:
         
         # Adjusts the policy based on states, target vectors and other things (needs more understanding)
         self.model.fit(states, target_vec, epochs = 1, verbose = 0)
-        
+    
+    def add_to_replay_memory(self, state, received_action, reward, next_state, done):
+        self.replay_memory_buffer.append((state, received_action, reward, next_state, done))
+    
     def get_random_sample_from_replay_mem(self):
         random_sample = random.sample(self.replay_memory_buffer, self.batch_size)
         return random_sample
@@ -233,6 +235,24 @@ class DQN:
                   "\n\t|| Last frame Reward: ", reward, "\t|| Average Reward: ", self.average_episodes_rewards, "\t|| Epsilon: ", self.epsilon,
                   "\n\t Total Frames trained: ", self.training_total_frame_count, "\t|| Frames this episode: ", episode_frame_count)
     
+            
+            if episode % 10 == 0:
+                plt.plot(self.average_rewards)
+                plt.plot(self.rewards)
+                plt.title("DQN Training Curve for \n", self.name)
+                plt.xlabel("Episode")
+                plt.ylabel("Rewards")
+                plt.show()
+                
+                
+        env.close()
+        plt.savefig("DQN_Training_Curve_", name)
+    
+    
+    
+    
+    
+    
     # Counter used for experience replay.
     def update_counter(self):
         self.counter += 1
@@ -280,7 +300,7 @@ def test_trained_model(self, trained_model, num_episodes):
     env.close()
     plt.plot(self.average_trained_episodes_rewards)
     plt.plot(self.trained_episodes_rewards)
-    plt.title("DQN Replay Trained Performance Curve")
+    plt.title("Testing trained DQN:\n", self.name)
     plt.xlabel("Episode")
     plt.ylabel("Rewards")
     plt.show()
@@ -301,7 +321,7 @@ if __name__ == '__main__':
     eps = 1.0
     eps_decay = 0.995
     gamma = 0.99
-    training_episodes = 200
+    training_episodes = 10
     
     
     # Allows for comparison between different models.
@@ -311,7 +331,7 @@ if __name__ == '__main__':
             # print("Training model: " + name)
             # print(model.summary())
             model = DQN(env, lr, gamma, eps, eps_decay, deep_layers, neurons)
-    #         model.train(training_episodes)
+            model.train(training_episodes)
             
     #         # Continuously train the model until it reaches the target average reward.
     #         while (np.mean(model.episodes_rewards[-10:]) < 180):
@@ -320,11 +340,11 @@ if __name__ == '__main__':
             
     
     
-    model = DQN(env, lr, gamma, eps, eps_decay)
-    model.train(training_episodes)
-    # Continuously train the model until it reaches the target average reward.
-    while (np.mean(model.episodes_rewards[-10:]) < 180):
-        model.train(training_episodes)
+    # model = DQN(env, lr, gamma, eps, eps_decay)
+    # model.train(training_episodes)
+    # # Continuously train the model until it reaches the target average reward.
+    # while (np.mean(model.episodes_rewards[-10:]) < 180):
+    #     model.train(training_episodes)
     
     
     # trained_model = load_model("replay_DQN_trained_model3.h5")
