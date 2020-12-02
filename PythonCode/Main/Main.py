@@ -20,20 +20,23 @@ if __name__ == '__main__':
     gamma = 0.99
     training_episodes = 200
     testing_episodes = 200
-    frames = 200
-    deep_layers = 1
-    neurons = 256
+    frames = 1000
+    num_deep_layers = [1, 2, 3]
+    num_neurons = 256
     input_layer_mult = 2
     memory_size = 100_000
     batch_size = 64
-    model = DQNAgent(env, learning_rate, gamma, epsilon, epsilon_decay, epsilon_min, deep_layers, neurons, 
+
+    for deep_layers in num_deep_layers:
+        model = DQNAgent(env, learning_rate, gamma, epsilon, epsilon_decay, epsilon_min, deep_layers, neurons, 
                     input_layer_mult, memory_size, batch_size, training_episodes, testing_episodes, frames)
     model.train()
-    while (np.mean(model.rewards[-10:]) < 180):
-        model.train()
-    model.save("replay_DQN_trained_model5.h5")
-    trained_model = load_model("replay_DQN_trained_model3.h5")
-    model.test_trained_model(trained_model, num_episodes=30)
+    
+    # while (np.mean(model.rewards[-10:]) < 180):
+    #     model.train()
+    # model.save("replay_DQN_trained_model5.h5")
+    # trained_model = load_model("replay_DQN_trained_model3.h5")
+    # model.test_trained_model(trained_model, num_episodes=30)
     
     
     # QLearning Cartpole:
