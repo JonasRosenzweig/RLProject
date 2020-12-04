@@ -33,8 +33,7 @@ from keras.losses import mean_squared_error
 
 
 class DQNAgent(RLAgent):
-    def __init__(self, env, learning_rate, gamma, epsilon, epsilon_decay, epsilon_min, 
-                 deep_layers, neurons, input_layer_mult, memory_size, batch_size, training_episodes, testing_episodes, frames):
+    def __init__(self, env, config, training_episodes, testing_episodes, frames):
         RLAgent.__init__(self, env, training_episodes, testing_episodes, frames)
         
         # self.learning_rate = learning_rate
@@ -42,40 +41,29 @@ class DQNAgent(RLAgent):
         # self.epsilon = epsilon
         # self.epsilon_decay = epsilon_decay
         # self.epsilon_min = epsilon_min
+        # self.memory_size = memory_size
+        # self.batch_size = batch_size
+        # Enables initalising NNs with multiple deep layers at varying size.
+        # self.deep_layers = deep_layers
+        # self.neurons = neurons
+        # self.input_layer_mult = input_layer_mult
+        # self.name = config.name
         
         self.action_space_dim = self.env.action_space.n
         self.observation_space_dim = self.env.observation_space.shape[0]
         
-        # self.memory_size = memory_size
-        self.memory = deque(maxlen=self.memory_size)
-        # self.batch_size = batch_size
+        # Config has all hyperparameters stored.
+        self.config = config
+        
+        self.memory = deque(maxlen=self.config.memory_size)
         self.replay_counter = 0
         
         # Keep track of how many frames the model ran through in total.
         self.training_frame_count = 0
         
-        # Enables initalising NNs with multiple deep layers at varying size.
-        # self.deep_layers = deep_layers
-        # self.neurons = neurons
-        # self.input_layer_mult = input_layer_mult
-        self.name = "{}_Deep_Layers_{}_Neurons_{}_Input_layer_mult_{}_Learning_rate_{}_Gamma_{}_Epsilon_{}_Epsilon_decay_{}_Epsilon_min_{}_Batch_size_{}_Memory_size_Timestamp_{}".format(deep_layers, neurons, input_layer_mult, learning_rate, gamma, epsilon, epsilon_decay, epsilon_min, batch_size, memory_size, int(time.time()))
 
         
-        # For Weights and Biases parameter Sweeps
-        self.run = wandb.init(project=self.name,
-                              config={
-                                  "deep_layers": deep_layers,
-                                  "neurons": neurons,
-                                  "learning_rate": learning_rate,
-                                  "gamma": gamma,
-                                  "epsilon": epsilon,
-                                  "epsilon_decay": epsilon_decay,
-                                  "epsilon_min": epsilon_min,
-                                  "batch_size": batch_size,
-                                  "memory_size": memory_size
-                            })
-        # Utilize the hyperparameters of the model like this: config.parameter
-        self.config = wandb.config
+        
 
         self.model = self.initialize_model()
         
@@ -84,20 +72,20 @@ class DQNAgent(RLAgent):
         model = Sequential()
         
         # Input layer (based on observation space of the environment)
-        model.add(Dense(self.neurons*self.input_layer_mult, input_dim = self.observation_space_dim, activation=relu))
+        model.add(Dense(self.config.neurons*self.config.input_layer_mult, input_dim = self.observation_space_dim, activation=relu))
         
         # Deep layers
-        for i in range(self.deep_layers):
-            model.add(Dense(self.neurons, activation=relu))
+        for i in range(self.config.deep_layers):
+            model.add(Dense(self.config.neurons, activation=relu))
         
         # Output layer (based on action space of the environment)
         model.add(Dense(self.action_space_dim, activation=linear))
         
         # Compile the model giving the loss and the optimizer as an argument.
-        model.compile(loss=mean_squared_error, optimizer=Adam(lr=self.learning_rate))
+        model.compile(loss=mean_squared_error, optimizer=Adam(lr=self.config.learning_rate))
         
         # Prints out the stats of the model to give an overview over what was just created.
-        print(self.name)
+        print(self.config.name)
         
         
         print(model.summary())
@@ -108,7 +96,7 @@ class DQNAgent(RLAgent):
     def get_action(self, state):
         
         # Based on a random number 0 <= n <= 1, if n smaller than the current epsilon e, select random action based on the action space of the environment.
-        if np.random.rand() < self.epsilon:
+        if np.random.rand() < self.config.epsilon:
             return random.randrange(self.action_space_dim)
         
         # Otherwise let the model decide the best action in the current environment state based on the momentary policy.
@@ -122,7 +110,7 @@ class DQNAgent(RLAgent):
     
     # Choose a random past experience from the replay memory
     def sample_from_memory(self):
-        sample = random.sample(self.memory, self.batch_size)
+        sample = random.sample(self.memory, self.config.batch_size)
         return sample
     
     def extract_from_sample(self, sample):
@@ -138,7 +126,7 @@ class DQNAgent(RLAgent):
     def learn_from_memory(self):
         
         # replay_memory_buffer size check (Needs rewording / more understanding)
-        if len(self.memory) < self.batch_size or self.replay_counter != 0:
+        if len(self.memory) < self.config.batch_size or self.replay_counter != 0:
             return
         
         # If the model has been completing the task with a desirable reward for a while, stop it to prevent it from overfitting.
@@ -149,9 +137,9 @@ class DQNAgent(RLAgent):
         
         # Convert the chosen experience's attributes to the needed parameters (state, action, etc.)
         states, actions, rewards, next_states, done_list = self.extract_from_sample(sample)
-        targets = rewards + self.gamma * (np.amax(self.model.predict_on_batch(next_states), axis=1)) * (1 - done_list)
+        targets = rewards + self.config.gamma * (np.amax(self.model.predict_on_batch(next_states), axis=1)) * (1 - done_list)
         target_vec = self.model.predict_on_batch(states)
-        indexes = np.array([i for i in range(self.batch_size)])
+        indexes = np.array([i for i in range(self.config.batch_size)])
         target_vec[[indexes], [actions]] = targets
         
         # Adjusts the policy based on states, target vectors and other things (needs more understanding)
@@ -159,7 +147,7 @@ class DQNAgent(RLAgent):
         
     def train(self):
         
-        wandb.init(project="LanderDQN", name=self.name)
+        wandb.init(project="LanderDQN", name=self.config.name)
         
         for episode in range(self.training_episodes):
             
@@ -203,8 +191,8 @@ class DQNAgent(RLAgent):
                     break
             
             # Reduce the epsilon based on decay rate to move the focus of the NN from exploration to exploitation over time. 
-            if self.epsilon > self.epsilon_min:
-                self.epsilon *= self.epsilon_decay
+            if self.config.epsilon > self.config.epsilon_min:
+                self.config.epsilon *= self.config.epsilon_decay
             
             average_reward = np.mean(self.training_episode_rewards[-100:])
             # Stop if the model has solved the environment (reward must average above 200).
@@ -214,15 +202,15 @@ class DQNAgent(RLAgent):
             # Add the episode reward to the list of episodes_rewards for the episodes    
             self.training_episode_rewards.append(episode_reward)
             self.training_average_rewards.append(average_reward)
-            wandb.log({'reward': average_reward, 'last reward': reward, 'epsilon': self.epsilon}, step=episode)
+            wandb.log({'reward': average_reward, 'last reward': reward, 'epsilon': self.config.epsilon}, step=episode)
             
             # Print out the episode's results with additional information.
             print("""Episode: {}\t\t\t|| Episode Reward: {:.2f}
 Last Frame Reward: {:.2f}\t|| Average Reward: {:.2f}\t|| Epsilon: {:.2f}
 Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
-                .format(episode, episode_reward, reward, average_reward, self.epsilon, episode_frame_count, self.training_frame_count))
+                .format(episode, episode_reward, reward, average_reward, self.config.epsilon, episode_frame_count, self.training_frame_count))
             # print("""Tr Ep: {}, Ep Reward: {:.2f}, Last Reward: {:.2f}, Total Frames: {}, Frames: {}, Avg Reward: {:.2f}, 
-                   # Eps: {:.2f},""".format(episode, episode_reward, reward, self.training_frame_count, episode_frame_count, average_reward, self.epsilon))
+                   # Eps: {:.2f},""".format(episode, episode_reward, reward, self.training_frame_count, episode_frame_count, average_reward, self.config.epsilon))
                       
             if episode % 50 == 0:
                 plt.plot(self.training_episode_rewards)
@@ -234,11 +222,11 @@ Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
                        
         self.env.close()
         figname = "Figure_"
-        figname += self.name
+        figname += self.config.name
         plt.savefig("DQN_Replay_Training_Performance_Curve")
             
     def save(self):
-        self.model.save(self.name)
+        self.model.save(self.config.name)
     
     def update_counter(self):
         self.replay_counter += 1
