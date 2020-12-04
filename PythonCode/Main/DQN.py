@@ -37,30 +37,46 @@ class DQNAgent(RLAgent):
                  deep_layers, neurons, input_layer_mult, memory_size, batch_size, training_episodes, testing_episodes, frames):
         RLAgent.__init__(self, env, training_episodes, testing_episodes, frames)
         
-        self.learning_rate = learning_rate
-        self.gamma = gamma
-        self.epsilon = epsilon
-        self.epsilon_decay = epsilon_decay
-        self.epsilon_min = epsilon_min
+        # self.learning_rate = learning_rate
+        # self.gamma = gamma
+        # self.epsilon = epsilon
+        # self.epsilon_decay = epsilon_decay
+        # self.epsilon_min = epsilon_min
         
         self.action_space_dim = self.env.action_space.n
         self.observation_space_dim = self.env.observation_space.shape[0]
         
-        self.memory_size = memory_size
+        # self.memory_size = memory_size
         self.memory = deque(maxlen=self.memory_size)
-        self.batch_size = batch_size
+        # self.batch_size = batch_size
         self.replay_counter = 0
         
         # Keep track of how many frames the model ran through in total.
         self.training_frame_count = 0
         
         # Enables initalising NNs with multiple deep layers at varying size.
-        self.deep_layers = deep_layers
-        self.neurons = neurons
-        self.input_layer_mult = input_layer_mult
-        self.name = "{}_Deep_Layers_{}_Neurons_Timestamp_{}".format(self.deep_layers, self.neurons, int(time.time()))
+        # self.deep_layers = deep_layers
+        # self.neurons = neurons
+        # self.input_layer_mult = input_layer_mult
+        self.name = "{}_Deep_Layers_{}_Neurons_{}_Input_layer_mult_{}_Learning_rate_{}_Gamma_{}_Epsilon_{}_Epsilon_decay_{}_Epsilon_min_{}_Batch_size_{}_Memory_size_Timestamp_{}".format(deep_layers, neurons, input_layer_mult, learning_rate, gamma, epsilon, epsilon_decay, epsilon_min, batch_size, memory_size, int(time.time()))
 
         
+        # For Weights and Biases parameter Sweeps
+        self.run = wandb.init(project=self.name,
+                              config={
+                                  "deep_layers": deep_layers,
+                                  "neurons": neurons,
+                                  "learning_rate": learning_rate,
+                                  "gamma": gamma,
+                                  "epsilon": epsilon,
+                                  "epsilon_decay": epsilon_decay,
+                                  "epsilon_min": epsilon_min,
+                                  "batch_size": batch_size,
+                                  "memory_size": memory_size
+                            })
+        # Utilize the hyperparameters of the model like this: config.parameter
+        self.config = wandb.config
+
         self.model = self.initialize_model()
         
     # Constructs model using sequential model and different (deep) layers.
@@ -82,6 +98,8 @@ class DQNAgent(RLAgent):
         
         # Prints out the stats of the model to give an overview over what was just created.
         print(self.name)
+        
+        
         print(model.summary())
         
         return model
@@ -141,7 +159,7 @@ class DQNAgent(RLAgent):
         
     def train(self):
         
-        wandb.init(project="LanderDQN", name="Performance")
+        wandb.init(project="LanderDQN", name=self.name)
         
         for episode in range(self.training_episodes):
             
