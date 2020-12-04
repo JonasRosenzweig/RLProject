@@ -28,7 +28,7 @@ if __name__ == '__main__':
     batch_size = 64
 
     for deep_layers in num_deep_layers:
-        model = DQNAgent(env, learning_rate, gamma, epsilon, epsilon_decay, epsilon_min, deep_layers, neurons, 
+        model = DQNAgent(env, learning_rate, gamma, epsilon, epsilon_decay, epsilon_min, deep_layers, num_neurons, 
                     input_layer_mult, memory_size, batch_size, training_episodes, testing_episodes, frames)
         model.train()
     

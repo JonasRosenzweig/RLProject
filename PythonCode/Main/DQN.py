@@ -153,7 +153,7 @@ class DQNAgent(RLAgent):
             
             for step in range(steps):
                 
-                #env.render()
+                self.env.render()
                 
                 # Decide what action to take.
                 exploit_action = self.get_action(state)
@@ -202,7 +202,7 @@ class DQNAgent(RLAgent):
             print("""Episode: {}\t\t\t|| Episode Reward: {:.2f}
 Last Frame Reward: {:.2f}\t|| Average Reward: {:.2f}\t|| Epsilon: {:.2f}
 Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
-                .format(episode, episode_reward, reward, average_reward, self.epsilon, episode_frame_count(), self.training_frame_count))
+                .format(episode, episode_reward, reward, average_reward, self.epsilon, episode_frame_count, self.training_frame_count))
             # print("""Tr Ep: {}, Ep Reward: {:.2f}, Last Reward: {:.2f}, Total Frames: {}, Frames: {}, Avg Reward: {:.2f}, 
                    # Eps: {:.2f},""".format(episode, episode_reward, reward, self.training_frame_count, episode_frame_count, average_reward, self.epsilon))
                       
