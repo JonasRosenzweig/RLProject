@@ -45,7 +45,7 @@ class DQNAgent(RLAgent):
         # self.batch_size = batch_size
         # Enables initalising NNs with multiple deep layers at varying size.
         # self.deep_layers = deep_layers
-        # self.neurons = neurons
+        # self.layer_size = layer_size
         # self.input_layer_mult = input_layer_mult
         # self.name = config.name
         
@@ -72,11 +72,11 @@ class DQNAgent(RLAgent):
         model = Sequential()
         
         # Input layer (based on observation space of the environment)
-        model.add(Dense(self.config.neurons*self.config.input_layer_mult, input_dim = self.observation_space_dim, activation=relu))
+        model.add(Dense(self.config.layer_size*self.config.input_layer_mult, input_dim = self.observation_space_dim, activation=relu))
         
         # Deep layers
         for i in range(self.config.deep_layers):
-            model.add(Dense(self.config.neurons, activation=relu))
+            model.add(Dense(self.config.layer_size, activation=relu))
         
         # Output layer (based on action space of the environment)
         model.add(Dense(self.action_space_dim, activation=linear))
@@ -85,7 +85,7 @@ class DQNAgent(RLAgent):
         model.compile(loss=mean_squared_error, optimizer=Adam(lr=self.config.learning_rate))
         
         # Prints out the stats of the model to give an overview over what was just created.
-        print(self.config.name)
+        #print(self.config.name)
         
         
         print(model.summary())
@@ -147,7 +147,7 @@ class DQNAgent(RLAgent):
         
     def train(self):
         
-        wandb.init(project="LanderDQN", name=self.config.name)
+        #wandb.init(project="DQN-LunarLander-v2_with_Config", name=self.config.name)
         
         for episode in range(self.training_episodes):
             
@@ -159,7 +159,7 @@ class DQNAgent(RLAgent):
             
             for step in range(steps):
                 
-                self.env.render()
+                #self.env.render()
                 
                 # Decide what action to take.
                 exploit_action = self.get_action(state)
@@ -246,7 +246,7 @@ Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
             
             for step in range(steps):
             
-                self.env.render()
+                #self.env.render()
                 trained_action = np.argmax(trained_model.predict(trained_state)[0])
                 next_state, reward, done, info = self.env.step(trained_action)
                 next_state = np.reshape(next_state, [1, observation_space_dim])

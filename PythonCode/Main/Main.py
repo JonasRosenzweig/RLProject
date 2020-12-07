@@ -34,10 +34,10 @@ if __name__ == '__main__':
     testing_episodes = 200
     frames = 1000
     
-    name = "{}_Deep_Layers_{}_Layer_size_{}_Input_layer_mult_{}_Learning_rate_{}_Gamma_{}_Epsilon_{}_Epsilon_decay_{}_Epsilon_min_{}_Batch_size_{}_Memory_size_Timestamp_{}".format(deep_layers, layer_size, input_layer_mult, learning_rate, gamma, epsilon, epsilon_decay, epsilon_min, batch_size, memory_size, int(time.time()))
+    name = "WithConfig_Timestamp_{}".format(int(time.time()))
     
     # For Weights and Biases parameter Sweeps
-    run = wandb.init(project=name,
+    run = wandb.init(project="DQN-LunarLander-v2_with_Config",
                               config={
                                   "deep_layers": deep_layers,
                                   "layer_size": layer_size,
@@ -49,12 +49,13 @@ if __name__ == '__main__':
                                   "epsilon_min": epsilon_min,
                                   "batch_size": batch_size,
                                   "memory_size": memory_size
-                            })
+                            }, name = name )
         
     # Utilize the hyperparameters of the model like this: config.parameter
     config = wandb.config
     
     model = DQNAgent(env, config, training_episodes, testing_episodes, frames)
+    model.train()
 
     # for deep_layers in deep_layers:
     #     model = DQNAgent(env, learning_rate, gamma, epsilon, epsilon_decay, epsilon_min, deep_layers, layer_size, 
