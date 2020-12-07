@@ -18,53 +18,64 @@ if __name__ == '__main__':
     np.random.seed(21)
     
     # Hyperparameters
-    learning_rate = 0.001
+    learning_rates = [0.001, 0.0001]
     epsilon = 1.0
-    epsilon_decay = 0.995
+    epsilon_decays = [0.995, 0.95]
     epsilon_min = 0.01
     gamma = 0.99
     deep_layers = 1
-    layer_size = 256
+    layer_sizes = [128, 256]
     input_layer_mult = 2
-    memory_size = 100_000
-    batch_size = 64
+    memory_sizes = [50_000, 100_000]
+    batch_sizes = [32, 64]
     
     
     training_episodes = 2000
-    testing_episodes = 200
+    testing_episodes = 0
     frames = 1000
     
     name = "DQNAgent"
-    
-    name = "WithConfig_Timestamp_{}".format(int(time.time()))
-    
-    # For Weights and Biases parameter Sweeps
-    run = wandb.init(project="DQN-LunarLander-v2_with_Config",
-                              config={
-                                  "deep_layers": deep_layers,
-                                  "layer_size": layer_size,
-                                  "input_layer_mult": input_layer_mult,
-                                  "learning_rate": learning_rate,
-                                  "gamma": gamma,
-                                  "epsilon": epsilon,
-                                  "epsilon_decay": epsilon_decay,
-                                  "epsilon_min": epsilon_min,
-                                  "batch_size": batch_size,
-                                  "memory_size": memory_size,
-                                  "name": name
-                            }, name = name )
+    for learning_rate in learning_rates:
+        for epsilon_decay in epsilon_decays:
+            for layer_size in layer_sizes:
+                for memory_size in memory_sizes:
+                    for batch_size in batch_sizes:
         
-    # Utilize the hyperparameters of the model like this: config.parameter
-    config = wandb.config
-    
-    model = DQNAgent(env, config, training_episodes, testing_episodes, frames)
-    model.train()
-    model.save("saved_models/DQNAgentModeltest.h5")
-    model.test_trained_model(load_model("DQNAgentModel100Rewardsave.h5"))
+                        name = "WithConfig_Timestamp_{}".format(int(time.time()))
+                        
+                        # For Weights and Biases parameter Sweeps
+                        run = wandb.init(project="DQN-LunarLander-v2_with_Config",
+                                                  config={
+                                                      "deep_layers": deep_layers,
+                                                      "layer_size": layer_size,
+                                                      "input_layer_mult": input_layer_mult,
+                                                      "learning_rate": learning_rate,
+                                                      "gamma": gamma,
+                                                      "epsilon": epsilon,
+                                                      "epsilon_decay": epsilon_decay,
+                                                      "epsilon_min": epsilon_min,
+                                                      "batch_size": batch_size,
+                                                      "memory_size": memory_size,
+                                                      "name": name
+                                                }, name = name )
+                            
+                        # Utilize the hyperparameters of the model like this: config.parameter
+                        config = wandb.config
+                        
+                        model = DQNAgent(env, config, training_episodes, testing_episodes, frames)
+                        
+                        model.train()
+                        model_dir = "saved_models"
+                        model_save_name = model_dir + "DQNModel_{}_".format(int(time.time())) + "sb.h5"
+                        model.save(model_save_name)
+                        #model.test_trained_model(load_model("DQNAgentModel100Rewardsave.h5"))
+            
     # for deep_layers in deep_layers:
-    #     model = DQNAgent(env, learning_rate, gamma, epsilon, epsilon_decay, epsilon_min, deep_layers, layer_size, 
-    #                 input_layer_mult, memory_size, batch_size, training_episodes, testing_episodes, frames)
-    #     model.train()
+    #     for learning_rate in learning_rates:
+        
+    #         model = DQNAgent(env, learning_rate, gamma, epsilon, epsilon_decay, epsilon_min, deep_layers, layer_size, 
+    #                     input_layer_mult, memory_size, batch_size, training_episodes, testing_episodes, frames)
+    #         model.train()
     
     # while (np.mean(model.rewards[-10:]) < 180):
     #     model.train()
