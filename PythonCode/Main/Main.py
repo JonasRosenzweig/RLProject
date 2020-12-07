@@ -13,7 +13,7 @@ if __name__ == '__main__':
     
     env = gym.make('LunarLander-v2')
     
-    # Initialize seeds for reproducability.
+    # Initialize seeds for reproducability. 
     env.seed(21)
     np.random.seed(21)
     
@@ -31,8 +31,10 @@ if __name__ == '__main__':
     
     
     training_episodes = 2000
-    testing_episodes = 200
+    testing_episodes = 2
     frames = 1000
+    
+    name = "DQNAgent"
     
     name = "WithConfig_Timestamp_{}".format(int(time.time()))
     
@@ -48,15 +50,17 @@ if __name__ == '__main__':
                                   "epsilon_decay": epsilon_decay,
                                   "epsilon_min": epsilon_min,
                                   "batch_size": batch_size,
-                                  "memory_size": memory_size
+                                  "memory_size": memory_size,
+                                  "name": name
                             }, name = name )
         
     # Utilize the hyperparameters of the model like this: config.parameter
     config = wandb.config
     
     model = DQNAgent(env, config, training_episodes, testing_episodes, frames)
-    model.train()
-
+    # model.train()
+    # model.save("DQNAgentModel100Reward.h5")
+    model.test_trained_model(load_model("DQNAgentModel100Reward.h5"))
     # for deep_layers in deep_layers:
     #     model = DQNAgent(env, learning_rate, gamma, epsilon, epsilon_decay, epsilon_min, deep_layers, layer_size, 
     #                 input_layer_mult, memory_size, batch_size, training_episodes, testing_episodes, frames)
