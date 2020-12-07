@@ -24,10 +24,10 @@ if __name__ == '__main__':
     epsilon_min = 0.01
     gamma = 0.99
     deep_layers = 1
-    layer_sizes = [256, 128]
+    layer_sizes = [512, 256, 128, 64, 32]
     input_layer_mult = 2
-    memory_sizes = [100_000, 50_000]
-    batch_sizes = [64, 32]
+    memory_sizes = [100_000, 200_000, 500_000]
+    batch_sizes = [64, 128, 256]
     
     
     training_episodes = 2000

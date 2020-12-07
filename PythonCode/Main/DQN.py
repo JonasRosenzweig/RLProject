@@ -150,7 +150,9 @@ class DQNAgent(RLAgent):
         target_vec[[indexes], [actions]] = targets
         
         # Adjusts the policy based on states, target vectors and other things (needs more understanding)
-        self.model.fit(states, target_vec, epochs=1, verbose=0, callbacks=[WandbCallback(data_type="image")])
+        self.model.fit(states, target_vec, epochs=1, verbose=0)
+        # for callbacks : , callbacks=[WandbCallback(data_type="image")] problem with wandb logging, though needed for sweeps
+        
         
     def train(self):
         start_time = time.time()
