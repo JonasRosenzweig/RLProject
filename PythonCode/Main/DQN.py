@@ -10,7 +10,7 @@ import time
 # Allows for logging the results online via "Weights and Biases"
 # source: https://colab.research.google.com/drive/1aEv8Haa3ppfClcCiC2TB8WLHB4jnY_Ds
 import wandb
-
+import keras as keras
 from RLAgent import RLAgent
 
 # Sequential NN model is the most common one.
@@ -31,15 +31,21 @@ from keras.losses import mean_squared_error
 import time 
 from wandb.integration.keras import WandbCallback
 
+metrics = [
+      keras.metrics.BinaryAccuracy(name='accuracy'),
+      keras.metrics.Precision(name='precision'),
+      keras.metrics.Recall(name='recall'),
+]
+
 
 
 class DQNAgent(RLAgent):
-    def __init__(self, env, config, training_episodes, testing_episodes, frames):
+    def __init__(self, env, config, epsilon, training_episodes, testing_episodes, frames):
         RLAgent.__init__(self, env, training_episodes, testing_episodes, frames)
         
         # self.learning_rate = learning_rate
         # self.gamma = gamma
-        # self.epsilon = epsilon
+        self.epsilon = epsilon
         # self.epsilon_decay = epsilon_decay
         # self.epsilon_min = epsilon_min
         # self.memory_size = memory_size
@@ -83,7 +89,7 @@ class DQNAgent(RLAgent):
         model.add(Dense(self.action_space_dim, activation=linear))
         
         # Compile the model giving the loss and the optimizer as an argument.
-        model.compile(loss=mean_squared_error, optimizer=Adam(lr=self.config.learning_rate), metrics = ['reward'])
+        model.compile(loss=mean_squared_error, optimizer=Adam(lr=self.config.learning_rate), metrics = metrics)
         
         # Prints out the stats of the model to give an overview over what was just created.
         #print(self.config.name)
@@ -97,7 +103,7 @@ class DQNAgent(RLAgent):
     def get_action(self, state):
         
         # Based on a random number 0 <= n <= 1, if n smaller than the current epsilon e, select random action based on the action space of the environment.
-        if np.random.rand() < self.config.epsilon:
+        if np.random.rand() < self.epsilon:
             return random.randrange(self.action_space_dim)
         
         # Otherwise let the model decide the best action in the current environment state based on the momentary policy.
@@ -193,8 +199,8 @@ class DQNAgent(RLAgent):
                     break
             
             # Reduce the epsilon based on decay rate to move the focus of the NN from exploration to exploitation over time. 
-            if self.config.epsilon > self.config.epsilon_min:
-                self.config.epsilon *= self.config.epsilon_decay
+            if self.epsilon > self.config.epsilon_min:
+                self.epsilon *= self.config.epsilon_decay
             
             average_reward = np.mean(self.training_episode_rewards[-100:])
             # Stop if the model has solved the environment (reward must average above 200).
@@ -210,15 +216,15 @@ class DQNAgent(RLAgent):
             # Add the episode reward to the list of episodes_rewards for the episodes    
             self.training_episode_rewards.append(episode_reward)
             self.training_average_rewards.append(average_reward)
-            wandb.log({'average reward': average_reward, 'last reward': reward, 'epsilon': self.config.epsilon, 'episode': episode }, step=episode)
+            wandb.log({'average reward': average_reward, 'last reward': reward, 'epsilon': self.epsilon, 'episode': episode }, step=episode)
             
             # Print out the episode's results with additional information.
             print("""Episode: {}\t\t\t|| Episode Reward: {:.2f}
 Last Frame Reward: {:.2f}\t|| Average Reward: {:.2f}\t|| Epsilon: {:.2f}
 Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
-                .format(episode, episode_reward, reward, average_reward, self.config.epsilon, episode_frame_count, self.training_frame_count))
+                .format(episode, episode_reward, reward, average_reward, self.epsilon, episode_frame_count, self.training_frame_count))
             # print("""Tr Ep: {}, Ep Reward: {:.2f}, Last Reward: {:.2f}, Total Frames: {}, Frames: {}, Avg Reward: {:.2f}, 
-                   # Eps: {:.2f},""".format(episode, episode_reward, reward, self.training_frame_count, episode_frame_count, average_reward, self.config.epsilon))
+                   # Eps: {:.2f},""".format(episode, episode_reward, reward, self.training_frame_count, episode_frame_count, average_reward, self.epsilon))
                       
             # if episode % 50 == 0:
             #     plt.plot(self.training_episode_rewards)
