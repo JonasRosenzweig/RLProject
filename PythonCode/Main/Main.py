@@ -31,7 +31,7 @@ if __name__ == '__main__':
     
     
     training_episodes = 2000
-    testing_episodes = 2
+    testing_episodes = 200
     frames = 1000
     
     name = "DQNAgent"
@@ -58,9 +58,9 @@ if __name__ == '__main__':
     config = wandb.config
     
     model = DQNAgent(env, config, training_episodes, testing_episodes, frames)
-    # model.train()
-    # model.save("DQNAgentModel100Reward.h5")
-    model.test_trained_model(load_model("DQNAgentModel100Reward.h5"))
+    model.train()
+    model.save("saved_models/DQNAgentModeltest.h5")
+    model.test_trained_model(load_model("DQNAgentModel100Rewardsave.h5"))
     # for deep_layers in deep_layers:
     #     model = DQNAgent(env, learning_rate, gamma, epsilon, epsilon_decay, epsilon_min, deep_layers, layer_size, 
     #                 input_layer_mult, memory_size, batch_size, training_episodes, testing_episodes, frames)
