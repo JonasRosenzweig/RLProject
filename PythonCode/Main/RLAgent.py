@@ -11,7 +11,7 @@ class RLAgent:
         self.test_average_rewards = []
 
         self.training_episode_rewards = []
-        self.training_average_rewards =[]
+        self.training_average_rewards = []
         
         
         
