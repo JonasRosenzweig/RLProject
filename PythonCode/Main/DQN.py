@@ -198,6 +198,8 @@ class DQNAgent(RLAgent):
             # Stop if the model has solved the environment (reward must average above 200).
             if average_reward > 200:
                 break
+            if average_reward < -400:
+                break
             
             # Add the episode reward to the list of episodes_rewards for the episodes    
             self.training_episode_rewards.append(episode_reward)
