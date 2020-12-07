@@ -1,0 +1,42 @@
+program: Main.py
+method: bayes
+metric:
+  goal: maximize
+  name: average reward
+parameters:
+  input_layer_mult:
+    max: 4
+    min: 1
+    distribution: int_uniform
+  learning_rate:
+    max: 0.01
+    min: 0.0001
+    distribution: uniform
+  epsilon_decay:
+    max: 0.995
+    min: 0.895
+    distribution: uniform
+  memory_size:
+    max: 200000
+    min: 25000
+    distribution: int_uniform
+  epsilon_min:
+    max: 0.25
+    min: 0.001
+    distribution: uniform
+  deep_layers:
+    max: 3
+    min: 1
+    distribution: int_uniform
+  layer_size:
+    max: 1024
+    min: 16
+    distribution: int_uniform
+  batch_size:
+    max: 256
+    min: 64
+    distribution: int_uniform
+  gamma:
+    max: 0.99
+    min: 0.89
+    distribution: uniform
