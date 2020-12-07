@@ -24,10 +24,10 @@ if __name__ == '__main__':
     epsilon_min = 0.01
     gamma = 0.99
     deep_layers = 1
-    layer_sizes = [128, 256]
+    layer_sizes = [256, 128]
     input_layer_mult = 2
-    memory_sizes = [50_000, 100_000]
-    batch_sizes = [32, 64]
+    memory_sizes = [100_000, 50_000]
+    batch_sizes = [64, 32]
     
     
     training_episodes = 2000
@@ -44,7 +44,7 @@ if __name__ == '__main__':
                         name = "WithConfig_Timestamp_{}".format(int(time.time()))
                         
                         # For Weights and Biases parameter Sweeps
-                        run = wandb.init(project="DQN-LunarLander-v2_with_Config",
+                        run = wandb.init(project="DQN-LunarLander-v2_with_Config_GPU",
                                                   config={
                                                       "deep_layers": deep_layers,
                                                       "layer_size": layer_size,

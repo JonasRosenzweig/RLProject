@@ -28,7 +28,7 @@ from keras.activations import relu, linear
 # Standard optimizer is adam.
 from keras.optimizers import Adam
 from keras.losses import mean_squared_error
-
+import time 
 
 
 
@@ -146,6 +146,7 @@ class DQNAgent(RLAgent):
         self.model.fit(states, target_vec, epochs=1, verbose=0)
         
     def train(self):
+        start_time = time.time()
         
         #wandb.init(project="DQN-LunarLander-v2_with_Config", name=self.config.name)
         
@@ -200,6 +201,10 @@ class DQNAgent(RLAgent):
                 break
             if average_reward < -400:
                 break
+            train_time_minutes = (time.time() - start_time)/60
+            if train_time_minutes > 30:
+                break
+            
             
             # Add the episode reward to the list of episodes_rewards for the episodes    
             self.training_episode_rewards.append(episode_reward)
@@ -221,8 +226,9 @@ Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
             #     plt.xlabel("Episode")
             #     plt.ylabel("Rewards")
             #     plt.show()
-                       
+        
         self.env.close()
+        
         # figname = "Figure_"
         # figname = self.config.name
         # plt.savefig("DQN_Replay_Training_Performance_Curve")
