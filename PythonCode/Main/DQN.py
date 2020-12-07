@@ -29,6 +29,7 @@ from keras.activations import relu, linear
 from keras.optimizers import Adam
 from keras.losses import mean_squared_error
 import time 
+from wandb.integration.keras import WandbCallback
 
 
 
@@ -82,7 +83,7 @@ class DQNAgent(RLAgent):
         model.add(Dense(self.action_space_dim, activation=linear))
         
         # Compile the model giving the loss and the optimizer as an argument.
-        model.compile(loss=mean_squared_error, optimizer=Adam(lr=self.config.learning_rate))
+        model.compile(loss=mean_squared_error, optimizer=Adam(lr=self.config.learning_rate), metrics = ['reward'])
         
         # Prints out the stats of the model to give an overview over what was just created.
         #print(self.config.name)
@@ -143,7 +144,7 @@ class DQNAgent(RLAgent):
         target_vec[[indexes], [actions]] = targets
         
         # Adjusts the policy based on states, target vectors and other things (needs more understanding)
-        self.model.fit(states, target_vec, epochs=1, verbose=0)
+        self.model.fit(states, target_vec, epochs=1, verbose=0, callbacks=[WandbCallback(data_type="image")])
         
     def train(self):
         start_time = time.time()

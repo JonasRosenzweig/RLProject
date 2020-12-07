@@ -57,7 +57,7 @@ if __name__ == '__main__':
                                                       "batch_size": batch_size,
                                                       "memory_size": memory_size,
                                                       "name": name
-                                                }, name = name )
+                                                }, name = name, allow_val_change = True)
                             
                         # Utilize the hyperparameters of the model like this: config.parameter
                         config = wandb.config
