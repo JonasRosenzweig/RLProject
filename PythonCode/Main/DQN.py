@@ -130,7 +130,7 @@ class DQNAgent(RLAgent):
             return
         
         # If the model has been completing the task with a desirable reward for a while, stop it to prevent it from overfitting.
-        if np.mean(self.training_episode_rewards[-10:]) > 180:
+        if np.mean(self.training_episode_rewards[-10:]) > 380:
             return
         
         sample = self.sample_from_memory()
@@ -196,7 +196,7 @@ class DQNAgent(RLAgent):
             
             average_reward = np.mean(self.training_episode_rewards[-100:])
             # Stop if the model has solved the environment (reward must average above 200).
-            if average_reward > 200:
+            if average_reward > 400:
                 break
             
             # Add the episode reward to the list of episodes_rewards for the episodes    

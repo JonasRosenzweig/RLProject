@@ -30,7 +30,7 @@ if __name__ == '__main__':
     batch_size = 64
     
     
-    training_episodes = 200
+    training_episodes = 2000
     testing_episodes = 200
     frames = 1000
     
