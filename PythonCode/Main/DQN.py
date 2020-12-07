@@ -47,7 +47,7 @@ class DQNAgent(RLAgent):
         # self.deep_layers = deep_layers
         # self.layer_size = layer_size
         # self.input_layer_mult = input_layer_mult
-        # self.name = config.name
+        self.name = config.name
         
         self.action_space_dim = self.env.action_space.n
         self.observation_space_dim = self.env.observation_space.shape[0]
@@ -130,7 +130,7 @@ class DQNAgent(RLAgent):
             return
         
         # If the model has been completing the task with a desirable reward for a while, stop it to prevent it from overfitting.
-        if np.mean(self.training_episode_rewards[-10:]) > 380:
+        if np.mean(self.training_episode_rewards[-10:]) > 100:
             return
         
         sample = self.sample_from_memory()
@@ -196,7 +196,7 @@ class DQNAgent(RLAgent):
             
             average_reward = np.mean(self.training_episode_rewards[-100:])
             # Stop if the model has solved the environment (reward must average above 200).
-            if average_reward > 400:
+            if average_reward > 200:
                 break
             
             # Add the episode reward to the list of episodes_rewards for the episodes    
@@ -212,21 +212,21 @@ Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
             # print("""Tr Ep: {}, Ep Reward: {:.2f}, Last Reward: {:.2f}, Total Frames: {}, Frames: {}, Avg Reward: {:.2f}, 
                    # Eps: {:.2f},""".format(episode, episode_reward, reward, self.training_frame_count, episode_frame_count, average_reward, self.config.epsilon))
                       
-            if episode % 50 == 0:
-                plt.plot(self.training_episode_rewards)
-                plt.plot(self.training_average_rewards)
-                plt.title("DQN Replay Training Performance Curve")
-                plt.xlabel("Episode")
-                plt.ylabel("Rewards")
-                plt.show()
+            # if episode % 50 == 0:
+            #     plt.plot(self.training_episode_rewards)
+            #     plt.plot(self.training_average_rewards)
+            #     plt.title("DQN Replay Training Performance Curve")
+            #     plt.xlabel("Episode")
+            #     plt.ylabel("Rewards")
+            #     plt.show()
                        
         self.env.close()
-        figname = "Figure_"
-        figname += self.config.name
-        plt.savefig("DQN_Replay_Training_Performance_Curve")
+        # figname = "Figure_"
+        # figname = self.config.name
+        # plt.savefig("DQN_Replay_Training_Performance_Curve")
             
-    def save(self):
-        self.model.save(self.config.name)
+    def save(self, name):
+        self.model.save(name)
     
     def update_counter(self):
         self.replay_counter += 1
@@ -246,7 +246,7 @@ Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
             
             for step in range(steps):
             
-                #self.env.render()
+                self.env.render()
                 trained_action = np.argmax(trained_model.predict(trained_state)[0])
                 next_state, reward, done, info = self.env.step(trained_action)
                 next_state = np.reshape(next_state, [1, observation_space_dim])
@@ -271,12 +271,12 @@ Last Frame Reward: {:.2f}\t|| Average Reward: {:.2f}"""
             #                                                                                      average_reward_trained))
         
         self.env.close()
-        plt.plot(self.test_episode_rewards)
-        plt.plot(self.test_average_rewards)
-        plt.title("DQN Replay Trained Performance Curve")
-        plt.xlabel("Episode")
-        plt.ylabel("Rewards")
-        plt.show()
+        # plt.plot(self.test_episode_rewards)
+        # plt.plot(self.test_average_rewards)
+        # plt.title("DQN Replay Trained Performance Curve")
+        # plt.xlabel("Episode")
+        # plt.ylabel("Rewards")
+        # plt.show()
             
             
             
