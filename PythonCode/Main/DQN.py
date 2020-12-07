@@ -204,7 +204,7 @@ class DQNAgent(RLAgent):
             # Add the episode reward to the list of episodes_rewards for the episodes    
             self.training_episode_rewards.append(episode_reward)
             self.training_average_rewards.append(average_reward)
-            wandb.log({'reward': average_reward, 'last reward': reward, 'epsilon': self.config.epsilon}, step=episode)
+            wandb.log({'average reward': average_reward, 'last reward': reward, 'epsilon': self.config.epsilon, 'episode': episode }, step=episode)
             
             # Print out the episode's results with additional information.
             print("""Episode: {}\t\t\t|| Episode Reward: {:.2f}
