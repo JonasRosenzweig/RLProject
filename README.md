@@ -2,14 +2,23 @@
 This Project is a semester project for the Computer Science module course for the International Bachelor in Natural Sciences at Roskilde University
 
 To run main.py:
+
 download anaconda 64bit
+
 go to anaconda powershell with admin priviledges
+
 (windows search anaconda, right click powershell, run as admin)
+
 in this order, type:
+
 pip install gym[all]
+
 conda install tensorflow
+
 conda install keras
-conda install wandb (for logging, comment any wandb out if you don't need this)
+
+conda install wandb (for logging, comment any mention of wandb if you don't want this)
+
 conda install Box2D
 
 if you have a CUDA optimized card it is recommended to get keras-gpu 
