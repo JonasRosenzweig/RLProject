@@ -31,11 +31,11 @@ from keras.losses import mean_squared_error
 import time 
 from wandb.integration.keras import WandbCallback
 
-metrics = [
-      keras.metrics.BinaryAccuracy(name='accuracy'),
-      keras.metrics.Precision(name='precision'),
-      keras.metrics.Recall(name='recall'),
-]
+# metrics = [
+#       keras.metrics.BinaryAccuracy(name='accuracy'),
+#       keras.metrics.Precision(name='precision'),
+#       keras.metrics.Recall(name='recall'),
+# ]
 
 
 
@@ -89,7 +89,7 @@ class DQNAgent(RLAgent):
         model.add(Dense(self.action_space_dim, activation=linear))
         
         # Compile the model giving the loss and the optimizer as an argument.
-        model.compile(loss=mean_squared_error, optimizer=Adam(lr=self.config.learning_rate), metrics = metrics)
+        model.compile(loss=mean_squared_error, optimizer=Adam(lr=self.config.learning_rate))
         
         # Prints out the stats of the model to give an overview over what was just created.
         #print(self.config.name)
@@ -208,7 +208,11 @@ class DQNAgent(RLAgent):
             # Stop if the model has solved the environment (reward must average above 200).
             if average_reward > 200:
                 break
-            if average_reward < -400:
+            if average_reward < -400 and episode > 100:
+                break
+            if average_reward < -300 and episode > 200:
+                break
+            if average_reward < -200 and episode > 300:
                 break
             train_time_minutes = (time.time() - start_time)/60
             if train_time_minutes > 30:

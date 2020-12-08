@@ -18,28 +18,31 @@ if __name__ == '__main__':
     np.random.seed(21)
     
     # Hyperparameters
-    learning_rates = [0.001, 0.0001]
+    learning_rates = [0.0001, 0.001]
     epsilon = 1.0
-    epsilon_decays = [0.995, 0.95]
+    epsilon_decay = 0.95
     epsilon_min = 0.01
     gamma = 0.99
     deep_layers = 1
-    layer_sizes = [512, 256, 128, 64, 32]
+    layer_sizes = [32, 256, 1024]
     input_layer_mult = 2
-    memory_sizes = [100_000, 200_000, 500_000]
-    batch_sizes = [64, 128, 256]
+    memory_sizes = [50_000, 100_000, 1_000_000]
+    batch_sizes = [64, 128]
     
     
     training_episodes = 2000
     testing_episodes = 0
     frames = 1000
+    hyper_param_counter = 0
+    total_runs = len(learning_rates)*len(layer_sizes)*len(memory_sizes)*len(batch_sizes)
     
     name = "DQNAgent"
     for learning_rate in learning_rates:
-        for epsilon_decay in epsilon_decays:
             for layer_size in layer_sizes:
                 for memory_size in memory_sizes:
                     for batch_size in batch_sizes:
+                        
+                        hyper_param_counter += 1
         
                         name = "WithConfig_Timestamp_{}".format(int(time.time()))
                         
@@ -67,6 +70,7 @@ if __name__ == '__main__':
                         model = DQNAgent(env, config, epsilon, training_episodes, testing_episodes, frames)
                         
                         model.train()
+                        print("Run {} of {}.".format(hyper_param_counter, total_runs))
                         model_dir = "saved_models"
                         model_save_name = model_dir + "DQNModel_{}_".format(int(time.time())) + "sb.h5"
                         model.save(model_save_name)
