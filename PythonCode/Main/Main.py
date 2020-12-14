@@ -54,38 +54,12 @@ if __name__ == '__main__':
         # 0.0001            1024        64          100.000
         
     for i in range(repeats):
-        hyper_param_counter += 1
         
         # Model previously finished in 221 Episodes
         learning_rate = 0.001
         layer_size = 256
         batch_size = 64
         memory_size = 100_000
-        
-        # Model previously finished in 242 Episodes
-        # learning_rate = 0.001
-        # layer_size = 256
-        # batch_size = 64
-        # memory_size = 50_000
-        
-        # Model previously finished in 282 Episodes
-        # learning_rate = 0.0001
-        # layer_size = 1024
-        # batch_size = 128
-        # memory_size = 50_000
-        
-        # Model previously finished in 472 Episodes
-        # learning_rate = 0.0001
-        # layer_size = 256
-        # batch_size = 64
-        # memory_size = 100_000
-        
-        # Model previously finished in 477 Episodes
-        # learning_rate = 0.0001
-        # layer_size = 1024
-        # batch_size = 64
-        # memory_size = 100_000
-        
         
         # name = "WithConfig_Timestamp_{}".format(int(time.time()))
         name = "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time()))
@@ -111,16 +85,170 @@ if __name__ == '__main__':
         
         model = DQNAgent(env, config, epsilon, training_episodes, testing_episodes, frames)
         
+        hyper_param_counter += 1
         # model.train()
         print("Run {} of {}.".format(hyper_param_counter, total_runs))
         # model_dir = "saved_models"
         # model_save_name = model_dir + "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time())) + "sb.h5"
         # model.save(model_save_name)
-        #model.test_trained_model(load_model("DQNAgentModel100Rewardsave.h5"))
         
+        #---------------------------------------------------------------------------------------
         
+        # Model previously finished in 242 Episodes
+        learning_rate = 0.001
+        layer_size = 256
+        batch_size = 64
+        memory_size = 50_000
         
+        # name = "WithConfig_Timestamp_{}".format(int(time.time()))
+        name = "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time()))
         
+        # For Weights and Biases parameter Sweeps
+        run = wandb.init(project="Experiment-5-Best-DQN-LunarLander-v2",
+                                  config={
+                                      "deep_layers": deep_layers,
+                                      "layer_size": layer_size,
+                                      "input_layer_mult": input_layer_mult,
+                                      "learning_rate": learning_rate,
+                                      "gamma": gamma,
+                                      "epsilon_decay": epsilon_decay,
+                                      "epsilon_min": epsilon_min,
+                                      "batch_size": batch_size,
+                                      "memory_size": memory_size,
+                                      "name": name
+                                }, name = name, allow_val_change = True)
+            
+        # Utilize the hyperparameters of the model like this: config.parameter
+        config = wandb.config
+       
+        
+        model = DQNAgent(env, config, epsilon, training_episodes, testing_episodes, frames)
+        
+        hyper_param_counter += 1
+        # model.train()
+        print("Run {} of {}.".format(hyper_param_counter, total_runs))
+        # model_dir = "saved_models"
+        # model_save_name = model_dir + "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time())) + "sb.h5"
+        # model.save(model_save_name)
+        
+        #---------------------------------------------------------------------------------------
+        
+        # Model previously finished in 282 Episodes
+        learning_rate = 0.0001
+        layer_size = 1024
+        batch_size = 128
+        memory_size = 50_000
+        
+        # name = "WithConfig_Timestamp_{}".format(int(time.time()))
+        name = "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time()))
+        
+        # For Weights and Biases parameter Sweeps
+        run = wandb.init(project="Experiment-5-Best-DQN-LunarLander-v2",
+                                  config={
+                                      "deep_layers": deep_layers,
+                                      "layer_size": layer_size,
+                                      "input_layer_mult": input_layer_mult,
+                                      "learning_rate": learning_rate,
+                                      "gamma": gamma,
+                                      "epsilon_decay": epsilon_decay,
+                                      "epsilon_min": epsilon_min,
+                                      "batch_size": batch_size,
+                                      "memory_size": memory_size,
+                                      "name": name
+                                }, name = name, allow_val_change = True)
+            
+        # Utilize the hyperparameters of the model like this: config.parameter
+        config = wandb.config
+       
+        
+        model = DQNAgent(env, config, epsilon, training_episodes, testing_episodes, frames)
+        
+        hyper_param_counter += 1
+        # model.train()
+        print("Run {} of {}.".format(hyper_param_counter, total_runs))
+        # model_dir = "saved_models"
+        # model_save_name = model_dir + "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time())) + "sb.h5"
+        # model.save(model_save_name)
+        
+        #---------------------------------------------------------------------------------------
+        
+        # Model previously finished in 472 Episodes
+        learning_rate = 0.0001
+        layer_size = 256
+        batch_size = 64
+        memory_size = 100_000
+        
+        # name = "WithConfig_Timestamp_{}".format(int(time.time()))
+        name = "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time()))
+        
+        # For Weights and Biases parameter Sweeps
+        run = wandb.init(project="Experiment-5-Best-DQN-LunarLander-v2",
+                                  config={
+                                      "deep_layers": deep_layers,
+                                      "layer_size": layer_size,
+                                      "input_layer_mult": input_layer_mult,
+                                      "learning_rate": learning_rate,
+                                      "gamma": gamma,
+                                      "epsilon_decay": epsilon_decay,
+                                      "epsilon_min": epsilon_min,
+                                      "batch_size": batch_size,
+                                      "memory_size": memory_size,
+                                      "name": name
+                                }, name = name, allow_val_change = True)
+            
+        # Utilize the hyperparameters of the model like this: config.parameter
+        config = wandb.config
+       
+        
+        model = DQNAgent(env, config, epsilon, training_episodes, testing_episodes, frames)
+        
+        hyper_param_counter += 1
+        # model.train()
+        print("Run {} of {}.".format(hyper_param_counter, total_runs))
+        # model_dir = "saved_models"
+        # model_save_name = model_dir + "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time())) + "sb.h5"
+        # model.save(model_save_name)
+        
+        #---------------------------------------------------------------------------------------
+        
+        # Model previously finished in 477 Episodes
+        learning_rate = 0.0001
+        layer_size = 1024
+        batch_size = 64
+        memory_size = 100_000
+        
+        # name = "WithConfig_Timestamp_{}".format(int(time.time()))
+        name = "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time()))
+        
+        # For Weights and Biases parameter Sweeps
+        run = wandb.init(project="Experiment-5-Best-DQN-LunarLander-v2",
+                                  config={
+                                      "deep_layers": deep_layers,
+                                      "layer_size": layer_size,
+                                      "input_layer_mult": input_layer_mult,
+                                      "learning_rate": learning_rate,
+                                      "gamma": gamma,
+                                      "epsilon_decay": epsilon_decay,
+                                      "epsilon_min": epsilon_min,
+                                      "batch_size": batch_size,
+                                      "memory_size": memory_size,
+                                      "name": name
+                                }, name = name, allow_val_change = True)
+            
+        # Utilize the hyperparameters of the model like this: config.parameter
+        config = wandb.config
+       
+        
+        model = DQNAgent(env, config, epsilon, training_episodes, testing_episodes, frames)
+        
+        hyper_param_counter += 1
+        # model.train()
+        print("Run {} of {}.".format(hyper_param_counter, total_runs))
+        # model_dir = "saved_models"
+        # model_save_name = model_dir + "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time())) + "sb.h5"
+        # model.save(model_save_name)
+        
+        #---------------------------------------------------------------------------------------
         
             
     # for deep_layers in deep_layers:
