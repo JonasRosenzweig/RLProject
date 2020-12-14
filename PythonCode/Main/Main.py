@@ -45,7 +45,15 @@ if __name__ == '__main__':
                         hyper_param_counter += 1
         
                         name = "WithConfig_Timestamp_{}".format(int(time.time()))
+                        # name = "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(int(time.time()))
                         
+                        # Hyperparameter setup for final experiment:
+                        # Learning rate     Layer Size  Batch Size  Memory Size
+                        # 0.001             256         64          100.000
+                        # 0.001             256         64          50.000
+                        # 0.0001            1024        128         50.000
+                        # 0.0001            256         64          100.000
+                        # 0.0001            1024        64          100.000
                         
                         
                         # For Weights and Biases parameter Sweeps
