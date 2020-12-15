@@ -48,7 +48,7 @@ class Train(Run):
                     Agent.updateQ(state, action, reward, next_state, done)
                     state = next_state
                 
-                if Agent.config.name == "DQAgent":
+                elif Agent.config.name == "DQAgent":
                     next_state = np.reshape(next_state, [1, Agent.observation_space_size])
                     Agent.addToMemory(state, action, reward, next_state, done)
                     state = next_state

@@ -15,7 +15,7 @@ class DQAgent(QAgent):
         QAgent.__init__(self, env, config)
         
         self.config = config
-        self.name = "DQAgent"
+        self.name = self.config.name
         self.memory = deque(maxlen=self.config.memory_size)
         self.model = self.initialize()
     
@@ -31,12 +31,12 @@ class DQAgent(QAgent):
         print(model.summary())
         return model
     
+    def randomAct(self, state):
+        return random.randrange(self.action_space_size)
+    
     def policyAct(self, state):
         predicted_actions = self.model.predict(state)
         return np.argmax(predicted_actions[0])
-    
-    def randomAct(self, state):
-        return random.randrange(self.action_space_size)
     
     def act(self, state):
         if np.random.random() <= self.config['epsilon']:

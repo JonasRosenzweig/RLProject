@@ -47,11 +47,8 @@ if __name__ == '__main__':
     goal = 200
     min_reward = -300
     
-    config = wandb.config
-    agent1 = DQAgent(env, config)
-    agent2 = QAgent(env, config)
-    name = agent1.name
     
+    nameDQAgent = "DQAgent"
     run = wandb.init(project="Refactor-Test",
                                   config = {"deep_layers": deep_layers,
                                       "layer_size": layer_size,
@@ -65,8 +62,11 @@ if __name__ == '__main__':
                                       "epsilon_min": epsilon_min,
                                       "batch_size": batch_size,
                                       "memory_size": memory_size,
-                                      "name": name})
-            
+                                      "name": nameDQAgent})
+    
+    config = wandb.config
+    agent1 = DQAgent(env, config)
+    # agent2 = QAgent(env, config)
     
     
     

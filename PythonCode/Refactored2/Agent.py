@@ -25,9 +25,9 @@ class Agent:
         
     frames : int
     
-    test_episode_rewards : list of ints
+    test_episode_rewards : list of floats
     
-    test_average_rewards : list of ints
+    test_average_rewards : list of floats
     
     training_episode_rewards : list of ints
     
