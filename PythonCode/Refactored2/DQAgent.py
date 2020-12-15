@@ -14,7 +14,6 @@ class DQAgent(QAgent):
     def __init__(self, env, config):
         QAgent.__init__(self, env, config)
         
-        self.config = config
         self.name = self.config.name
         self.memory = deque(maxlen=self.config.memory_size)
         self.model = self.initialize()
@@ -48,7 +47,7 @@ class DQAgent(QAgent):
         self.memory.append((self, state, action, reward, next_state, done))
         
     def sampleFromMemory(self):
-        sample = np.random.sample(self.memory, self.config.batch_size)
+        sample = random.sample(self.memory, self.config.batch_size)
         return sample
     
     def extractFromSample(self, sample):
@@ -62,11 +61,11 @@ class DQAgent(QAgent):
         return np.squeeze(states), actions, rewards, next_states, done_list
     
     def updateReplayCount(self):
-        self.config.replay_counter += 1
-        self.config.replay_counter = self.replay_counter % self.config.replay_step_size
+        self.replay_counter += 1
+        self.replay_counter = self.replay_counter % self.config.replay_step_size
     
     def learnFromMemory(self):
-        if len(self.memory) < self.config.batch_size or self.config.replay_counter != 0:
+        if len(self.memory) < self.config.batch_size or self.replay_counter != 0:
             return
         if np.mean(self.training_episode_rewards[-10:]) > 100:
             return
@@ -82,6 +81,7 @@ class DQAgent(QAgent):
         
     def save(self, name):
         self.model.save(name)
+        
         
         
         

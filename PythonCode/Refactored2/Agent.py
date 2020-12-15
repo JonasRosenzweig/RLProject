@@ -43,8 +43,14 @@ class Agent:
         self.observation_space = env.observation_space
         self.observation_space_size = env.observation_space.shape[0]
         
+        self.test_episode_rewards = []
+        self.test_average_rewards = []
+
+        self.training_episode_rewards = []
+        self.training_average_rewards = []
         
-        self.replay_count = 0
+        
+        self.replay_counter = 0
         
         
         

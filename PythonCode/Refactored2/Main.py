@@ -35,7 +35,7 @@ if __name__ == '__main__':
     
     memory_size = 100_000
     batch_size = 64
-    replay_counter = 5
+    replay_step_size = 5
     
     experiment_episodes = 2
     training_episodes = 2
@@ -56,8 +56,8 @@ if __name__ == '__main__':
                                       "input_layer_mult": input_layer_mult,
                                       "learning_rate": learning_rate,
                                       "epsilon": epsilon,
-                                      "replay_counter": replay_counter,
                                       "gamma": gamma,
+                                      "replay_step_size": replay_step_size,
                                       "epsilon_decay": epsilon_decay,
                                       "epsilon_min": epsilon_min,
                                       "batch_size": batch_size,
@@ -65,8 +65,6 @@ if __name__ == '__main__':
                                       "name": nameDQAgent})
     
     config = wandb.config
-    print(config.buckets) # [3, 3, 6, 6]
-    print(env.action_space.n) # 4
     agent1 = DQAgent(env, config)
    
     # agent2 = QAgent(env, config)

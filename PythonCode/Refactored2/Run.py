@@ -9,12 +9,6 @@ class Run:
         self.run_config = run_config
         self.Agent = Agent
        
-        self.test_episode_rewards = []
-        self.test_average_rewards = []
-
-        self.training_episode_rewards = []
-        self.training_average_rewards = []
-        
         self.gamma_rewards = []
         self.learning_rate_rewards = []
         self.epsilon_decay_rewards = []
@@ -77,8 +71,8 @@ class Train(Run):
                 break
             if train_time_minutes > run_config['episode_time_limit'] and run_config['early_stop']:
                 break
-            self.training_episode_rewards.append(episode_reward)
-            self.training_average_rewards.append(average_reward)
+            Agent.training_episode_rewards.append(episode_reward)
+            Agent.training_average_rewards.append(average_reward)
             wandb.log({'average reward': average_reward, 'last reward': reward, 'epsilon': Agent.config.epsilon, 'episode': episode }, step=episode)
             print("""Episode: {}\t\t\t|| Episode Reward: {:.2f}
 Last Frame Reward: {:.2f}\t|| Average Reward: {:.2f}\t|| Epsilon: {:.2f}
@@ -113,9 +107,9 @@ class Test(Train):
                 if done: 
                     break
             
-            average_reward_trained = np.mean(self.trained_rewards[-100:])
-            self.test_episode_rewards.append(episode_reward)
-            self.test_average_rewards.append(average_reward_trained)
+            average_reward_trained = np.mean(Agent.trained_rewards[-100:])
+            Agent.test_episode_rewards.append(episode_reward)
+            Agent.test_average_rewards.append(average_reward_trained)
             print("""Episode: {}\t\t\t|| Episode Reward: {:.2f}\
 Last Frame Reward: {:.2f}\t|| Average Reward: {:.2f}"""
               .format(episode, episode_reward, reward, average_reward_trained))
