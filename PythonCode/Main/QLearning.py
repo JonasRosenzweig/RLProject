@@ -1,5 +1,6 @@
 import math
 import wandb
+import gym
 
 from RLAgent import RLAgent
 
@@ -18,6 +19,7 @@ class QAgent(RLAgent):
         self.buckets = (3,3,6,6,)
         
         self.Q = np.zeros(self.buckets + (self.env.action_space.n,))
+        
             
     def discretize(self, state):
         upper_bounds = [self.env.observation_space.high[0], 0.5, self.env.observation_space.high[2], math.radians(50)]
@@ -73,9 +75,28 @@ class QAgent(RLAgent):
                 plt.title(title)
                 plt.xlabel("Episode")
                 plt.ylabel("Rewards")
-                plt.show()
+                # plt.show()
         self.env.close()
-        plt.savefig(title)
+        # plt.savefig(title)
+        
+env = gym.make("LunarLander-v2")
+gamma = 0.99
+min_learning_rate = 0.001
+epsilon_min = 0.01
+divisor = 25
+buckets = (3,3,6,6,)
+training_episodes = 1
+testing_episodes = 1
+frames = 1000
+
+agent = QAgent(env, gamma, min_learning_rate, 
+               epsilon_min, divisor, buckets, 
+               training_episodes, testing_episodes, frames)
+
+print(buckets) # (3, 3, 6, 6)
+print(env.action_space.n) # 4
+        
+        
         
                 
             

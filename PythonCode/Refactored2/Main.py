@@ -65,7 +65,10 @@ if __name__ == '__main__':
                                       "name": nameDQAgent})
     
     config = wandb.config
+    print(config.buckets) # [3, 3, 6, 6]
+    print(env.action_space.n) # 4
     agent1 = DQAgent(env, config)
+   
     # agent2 = QAgent(env, config)
     
     
