@@ -17,6 +17,8 @@ class DQAgent(QAgent):
         self.name = self.config.name
         self.memory = deque(maxlen=self.config.memory_size)
         self.model = self.initialize()
+        
+        self.replay_counter = 0
     
     def initialize(self):
         model = Sequential()

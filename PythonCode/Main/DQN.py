@@ -40,20 +40,14 @@ from wandb.integration.keras import WandbCallback
 
 
 class DQNAgent(RLAgent):
+    """
+    
+    """
+    
     def __init__(self, env, config, epsilon, training_episodes, testing_episodes, frames):
         RLAgent.__init__(self, env, training_episodes, testing_episodes, frames)
         
-        # self.learning_rate = learning_rate
-        # self.gamma = gamma
         self.epsilon = epsilon
-        # self.epsilon_decay = epsilon_decay
-        # self.epsilon_min = epsilon_min
-        # self.memory_size = memory_size
-        # self.batch_size = batch_size
-        # Enables initalising NNs with multiple deep layers at varying size.
-        # self.deep_layers = deep_layers
-        # self.layer_size = layer_size
-        # self.input_layer_mult = input_layer_mult
         self.name = config.name
         
         self.action_space_dim = self.env.action_space.n
