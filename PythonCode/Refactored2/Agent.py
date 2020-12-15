@@ -89,7 +89,10 @@ class Agent:
         self.test_episode_rewards = []
         self.test_average_rewards = []
         
+<<<<<<< HEAD
+=======
 
+>>>>>>> 7a5d3d849553efa909755ef81040ddb9ce1ae084
         
         
         
