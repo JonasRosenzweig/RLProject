@@ -36,4 +36,5 @@ https://github.com/DollarAkshay/Artificial-Intelligence/tree/e1d4c82ee49dbccea74
 
 https://github.com/keon/deep-q-learning
 
+https://gist.github.com/brtknr/30c0199ccc703b8a69d170475068cc30
 
