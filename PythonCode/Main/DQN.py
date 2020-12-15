@@ -41,10 +41,121 @@ from wandb.integration.keras import WandbCallback
 
 class DQNAgent(RLAgent):
     """
+    A class used to build Deep Q-learning neural networks.
     
+    This subclass of RLAgent allows to create Deep Q-learning neural networks 
+    (DQNs) with externally specified (hyper-)parameters and provides methods 
+    for training and testing models.
+    
+    Attributes
+    ----------
+    env : env
+        The environment of a RL algorithm.
+        
+    config : config of parameters
+        Wandb's config file for storing and tracking parameters.
+        
+    epsilon : float
+        Used to determine whether a random or exploitative action is taken.
+        
+    training_episodes : int
+        Maximum number of training episodes.
+        
+    testing_episodes : int
+        Maximum number of testing episodes.
+        
+    frames : int
+        Maximum number of frames during an episode.
+        
+    name : str
+        The name of the DQN.
+    
+    action_space_dim : int
+        The number of values in the action space.
+        
+    observation_space_dim : int
+        The number of values in the observation space.
+        
+    memory : int
+        Maximum length of the memory_size.
+    
+    replay_counter : int
+        A counter used to determine when the agent should learn from
+        experience.
+        
+    training_frame_count : int
+        A counter used to keep track of how many frames the agent ran 
+        through during training.
+    
+    model : model
+        A model of a DQN.
+            
+    Methods (Do not mention parameter "self")
+    -------
+    
+    Returns (Expected returned values)
+    -------
+    
+    See Also (Referring to related code)
+    --------
+    
+    Notes (Referring to additional information)
+    -----
+    
+    References (Citing the sources in Notes)
+    ----------
     """
     
     def __init__(self, env, config, epsilon, training_episodes, testing_episodes, frames):
+        """
+        Parameters
+        ----------
+        env : env
+            The environment of a RL algorithm.
+            
+        config : config of parameters
+            Wandb's config file for storing and tracking parameters.
+            
+        epsilon : float
+            Used to determine whether a random or exploitative action is taken.
+            
+        training_episodes : int
+            Maximum number of training episodes.
+            
+        testing_episodes : int
+            Maximum number of testing episodes.
+            
+        frames : int
+            Maximum number of frames during an episode.
+            
+        name : str
+            The name of the DQN.
+        
+        action_space_dim : int
+            The number of values in the action space.
+            
+        observation_space_dim : int
+            The number of values in the observation space.
+            
+        memory : int
+            Maximum length of the memory_size.
+        
+        replay_counter : int
+            A counter used to determine when the agent should learn from
+            experience.
+            
+        training_frame_count : int
+            A counter used to keep track of how many frames the agent ran 
+            through during training.
+        
+        model : model
+            A model of a DQN.
+        
+        Returns
+        -------
+        None.
+
+        """
         RLAgent.__init__(self, env, training_episodes, testing_episodes, frames)
         
         self.epsilon = epsilon
