@@ -50,7 +50,6 @@ class Agent:
         self.training_average_rewards = []
         
         
-        self.replay_counter = 0
         
         
         

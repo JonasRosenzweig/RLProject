@@ -4,6 +4,7 @@ from collections import deque
 
 from QAgent import QAgent
 
+import tensorflow as tf
 from keras import Sequential
 from keras.layers import Dense
 from keras.activations import relu, linear
@@ -17,12 +18,14 @@ class DQAgent(QAgent):
         self.name = self.config.name
         self.memory = deque(maxlen=self.config.memory_size)
         self.model = self.initialize()
+        
+        self.replay_counter = 0
     
     def initialize(self):
         model = Sequential()
         model.add(Dense(self.config.layer_size*self.config.input_layer_mult, 
-                        input_dim = self.observation_space_size, activation=relu))
-        for i in range(self.config.deep_layers):
+                        input_dim = tf.reshape(self.observation_space_size, [1,]), activation=relu)) # input_dim = input shape value
+        for i in range(self.config.deep_layers):                                   # batch_size is x in receied input: [x, 1]
             model.add(Dense(self.config.layer_size, activation=relu))
         model.add(Dense(self.action_space_size, activation=linear))
         model.compile(loss=mean_squared_error, 
@@ -72,7 +75,7 @@ class DQAgent(QAgent):
         sample = self.sampleFromMemory()
 
         states, actions, rewards, next_states, done_list = self.extractFromSample(sample)
-        targets = rewards + self.config.gamma * (np.amax(self.model.predict_on_batch(next_states), axis=1)) 
+        targets = rewards + self.config.gamma * (np.amax(self.model.predict_on_batch(next_states), axis=1)) * (1 - done_list)
         target_vec = self.model.predict_on_batch(states)
         indexes = np.array([i for i in range(self.config.batch_size)])
         target_vec[[indexes], [actions]] = targets
