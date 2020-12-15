@@ -50,43 +50,30 @@ class DQNAgent(RLAgent):
     Attributes
     ----------
     env : env
-        The environment of a RL algorithm.
-        
+        The environment of a RL algorithm.        
     config : config of parameters
-        Wandb's config file for storing and tracking parameters.
-        
+        Wandb's config file for storing and tracking parameters.        
     epsilon : float
-        Used to determine whether a random or exploitative action is taken.
-        
+        Used to determine whether a random or exploitative action is taken.        
     training_episodes : int
-        Maximum number of training episodes.
-        
+        Maximum number of training episodes.        
     testing_episodes : int
-        Maximum number of testing episodes.
-        
+        Maximum number of testing episodes.        
     frames : int
-        Maximum number of frames during an episode.
-        
+        Maximum number of frames during an episode.        
     name : str
-        The name of the DQN.
-    
+        The name of the DQN.    
     action_space_dim : int
-        The number of values in the action space.
-        
+        The number of values in the action space.        
     observation_space_dim : int
-        The number of values in the observation space.
-        
+        The number of values in the observation space.        
     memory : int
-        Maximum length of the memory_size.
-    
+        Maximum length of the memory_size.    
     replay_counter : int
-        A counter used to determine when the agent should learn from
-        experience.
-        
+        A counter used to determine when the agent should learn from experience.        
     training_frame_count : int
         A counter used to keep track of how many frames the agent ran 
-        through during training.
-    
+        through during training.    
     model : model
         A model of a DQN.
             
@@ -112,6 +99,12 @@ class DQNAgent(RLAgent):
         
     train()
         Loop to train the DQN.
+        
+    save()
+        Saves the model.
+        
+    update_counter()
+        
         
     Returns (Expected returned values)
     -------
