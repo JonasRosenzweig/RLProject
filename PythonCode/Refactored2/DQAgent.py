@@ -24,7 +24,7 @@ class DQAgent(QAgent):
     def initialize(self):
         model = Sequential()
         model.add(Dense(self.config.layer_size*self.config.input_layer_mult, 
-                        input_dim = tf.reshape(self.observation_space_size, [1,]), activation=relu)) # input_dim = input shape value
+                        input_dim = 10, activation=relu)) # input_dim = input shape value
         for i in range(self.config.deep_layers):                                   # batch_size is x in receied input: [x, 1]
             model.add(Dense(self.config.layer_size, activation=relu))
         model.add(Dense(self.action_space_size, activation=linear))

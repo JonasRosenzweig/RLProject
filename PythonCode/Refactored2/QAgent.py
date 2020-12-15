@@ -13,6 +13,7 @@ class QAgent(Agent):
         self.buckets = self.config.buckets
         self.config = self.config
         self.name = "QAgent"
+        
         self.Qtable = np.zeros(tuple(self.config.buckets) + (env.action_space.n,))
         
         
