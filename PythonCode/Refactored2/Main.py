@@ -30,11 +30,11 @@ if __name__ == '__main__':
     
     
     deep_layers = 1
-    layer_size = 128
+    layer_size = 256
     input_layer_mult = 2
     
     memory_size = 100_000
-    batch_size = 64
+    batch_size = 8
     replay_step_size = 5
     
     experiment_episodes = 2
@@ -65,6 +65,7 @@ if __name__ == '__main__':
                                       "name": nameDQAgent})
     
     config = wandb.config
+    
     agent1 = DQAgent(env, config)
    
     # agent2 = QAgent(env, config)

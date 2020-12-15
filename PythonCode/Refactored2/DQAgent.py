@@ -72,8 +72,7 @@ class DQAgent(QAgent):
         sample = self.sampleFromMemory()
 
         states, actions, rewards, next_states, done_list = self.extractFromSample(sample)
-        targets = rewards + self.config.gamma * (np.amax(self.model.predict_on_batch(next_states), 
-                                                         axis=1)) * (1 - done_list)
+        targets = rewards + self.config.gamma * (np.amax(self.model.predict_on_batch(next_states), axis=1)) 
         target_vec = self.model.predict_on_batch(states)
         indexes = np.array([i for i in range(self.config.batch_size)])
         target_vec[[indexes], [actions]] = targets

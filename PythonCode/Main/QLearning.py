@@ -79,24 +79,7 @@ class QAgent(RLAgent):
         self.env.close()
         # plt.savefig(title)
         
-env = gym.make("LunarLander-v2")
-gamma = 0.99
-min_learning_rate = 0.001
-epsilon_min = 0.01
-divisor = 25
-buckets = (3,3,6,6,)
-training_episodes = 1
-testing_episodes = 1
-frames = 1000
 
-agent = QAgent(env, gamma, min_learning_rate, 
-               epsilon_min, divisor, buckets, 
-               training_episodes, testing_episodes, frames)
-
-print(buckets) # (3, 3, 6, 6)
-print(env.action_space.n) # 4
-        
-        
         
                 
             
