@@ -4,7 +4,7 @@
 # Import the gym environment from OpenAI
 import random
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from collections import deque
 import time
 # Allows for logging the results online via "Weights and Biases"

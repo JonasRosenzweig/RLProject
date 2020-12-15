@@ -4,7 +4,7 @@ import time
 import wandb
 
 from DQN import DQNAgent
-from QLearning import QAgent
+# from QLearning import QAgent
 from keras.models import load_model
 
 
@@ -20,7 +20,7 @@ if __name__ == '__main__':
     # Hyperparameters
     # learning_rates = [0.0001, 0.001]
     epsilon = 1.0
-    epsilon_decay = 0.95
+    epsilon_decay = 0.995
     epsilon_min = 0.01
     gamma = 0.99
     deep_layers = 1
@@ -65,7 +65,7 @@ if __name__ == '__main__':
         name = "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time()))
         
         # For Weights and Biases parameter Sweeps
-        run = wandb.init(project="Experiment-5-Best-DQN-LunarLander-v2",
+        run = wandb.init(project="Experiment2_5_DQN_LunarLander-v2",
                                   config={
                                       "deep_layers": deep_layers,
                                       "layer_size": layer_size,
@@ -104,7 +104,7 @@ if __name__ == '__main__':
         name = "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time()))
         
         # For Weights and Biases parameter Sweeps
-        run = wandb.init(project="Experiment-5-Best-DQN-LunarLander-v2",
+        run = wandb.init(project="Experiment2_5_DQN_LunarLander-v2",
                                   config={
                                       "deep_layers": deep_layers,
                                       "layer_size": layer_size,
@@ -143,7 +143,7 @@ if __name__ == '__main__':
         name = "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time()))
         
         # For Weights and Biases parameter Sweeps
-        run = wandb.init(project="Experiment-5-Best-DQN-LunarLander-v2",
+        run = wandb.init(project="Experiment2_5_DQN_LunarLander-v2",
                                   config={
                                       "deep_layers": deep_layers,
                                       "layer_size": layer_size,
@@ -182,7 +182,7 @@ if __name__ == '__main__':
         name = "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time()))
         
         # For Weights and Biases parameter Sweeps
-        run = wandb.init(project="Experiment-5-Best-DQN-LunarLander-v2",
+        run = wandb.init(project="Experiment2_5_DQN_LunarLander-v2",
                                   config={
                                       "deep_layers": deep_layers,
                                       "layer_size": layer_size,
@@ -221,7 +221,7 @@ if __name__ == '__main__':
         name = "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time()))
         
         # For Weights and Biases parameter Sweeps
-        run = wandb.init(project="Experiment-5-Best-DQN-LunarLander-v2",
+        run = wandb.init(project="Experiment2_5_DQN_LunarLander-v2",
                                   config={
                                       "deep_layers": deep_layers,
                                       "layer_size": layer_size,
