@@ -9,7 +9,35 @@ import matplotlib.pyplot as plt
 
 
 class QAgent(RLAgent):
+    
     def __init__(self, env, gamma, min_learning_rate, epsilon_min, divisor, buckets, training_episodes, testing_episodes, frames):
+        """
+        Parameters
+        ----------
+        env : TYPE
+            DESCRIPTION.
+        gamma : TYPE
+            DESCRIPTION.
+        min_learning_rate : TYPE
+            DESCRIPTION.
+        epsilon_min : TYPE
+            DESCRIPTION.
+        divisor : TYPE
+            DESCRIPTION.
+        buckets : TYPE
+            DESCRIPTION.
+        training_episodes : TYPE
+            DESCRIPTION.
+        testing_episodes : TYPE
+            DESCRIPTION.
+        frames : TYPE
+            DESCRIPTION.
+
+        Returns
+        -------
+        None.
+
+        """
         RLAgent.__init__(self, env, training_episodes, testing_episodes, frames)
         self.env = env
         self.gamma = gamma
@@ -22,6 +50,20 @@ class QAgent(RLAgent):
         
             
     def discretize(self, state):
+        """
+        
+
+        Parameters
+        ----------
+        state : TYPE
+            DESCRIPTION.
+
+        Returns
+        -------
+        TYPE
+            DESCRIPTION.
+
+        """
         upper_bounds = [self.env.observation_space.high[0], 0.5, self.env.observation_space.high[2], math.radians(50)]
         lower_bounds = [self.env.observation_space.low[0], -0.5, self.env.observation_space.low[2], -math.radians(50)]
         ratios = [(state[i] + abs(lower_bounds[i])) / (upper_bounds[i] - lower_bounds[i]) for i in range(len(state))]
@@ -30,9 +72,48 @@ class QAgent(RLAgent):
         return tuple(discretized_state)
     
     def get_action(self, state, epsilon):
+        """
+        
+
+        Parameters
+        ----------
+        state : TYPE
+            DESCRIPTION.
+        epsilon : TYPE
+            DESCRIPTION.
+
+        Returns
+        -------
+        TYPE
+            DESCRIPTION.
+
+        """
         return self.env.action_space.sample() if (np.random.random() <= epsilon) else np.argmax(self.Q[state])
     
     def update_Q(self, state, action, reward, next_state, learning_rate):
+        """
+        1 Line Description
+        
+        Detailed Description
+
+        Parameters
+        ----------
+        state : TYPE
+            DESCRIPTION.
+        action : TYPE
+            DESCRIPTION.
+        reward : TYPE
+            DESCRIPTION.
+        next_state : TYPE
+            DESCRIPTION.
+        learning_rate : TYPE
+            DESCRIPTION.
+
+        Returns
+        -------
+        None.
+
+        """
         self.Q[state][action] += learning_rate * (reward + self.gamma * np.max(self.Q[next_state]) - self.Q[state][action])
         
     def get_epsilon(self, episode):

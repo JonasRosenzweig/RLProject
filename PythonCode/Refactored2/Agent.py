@@ -1,6 +1,6 @@
 class Agent:
     """
-    A class used to build RL algorithms
+    A class used to build Reinforcement Learning algorithms.
     
     This class serves as a superclass to build more specific reinforcement 
     learning (RL) algorithms and provides the fundamental parameters found in
@@ -9,31 +9,71 @@ class Agent:
     Attributes
     ---------
     env : env
-        The environment of a RL algorithm
+        The environment of a RL algorithm.
+        
+    config : config of parameters
+        Wandb's config file for storing and tracking parameters.
         
     action_space : space
-        The environment's action space
+        The environment's action space.
+        
+    action_space_size : int
+        The number of values in the action space.
         
     observation_space : space
-        The environment's observation space
+        The environment's observation space.
         
-    training_episodes : int
-        Maximum number of training episodes
-        
-    testing_episodes : int
-        Maximum number of testing episodes
-        
-    frames : int
-    
-    test_episode_rewards : list of floats
-    
-    test_average_rewards : list of floats
+    observation_space_size : int
+        The number of values in the observation space.
     
     training_episode_rewards : list of ints
-    
+        List of rewards during training.
+        
     training_average_rewards : list of ints
+        List of average rewards during training.
+        
+    test_episode_rewards : list of floats
+        List of rewards during testing.
+        
+    test_average_rewards : list of floats
+        List of average rewards during testing.      
     """
+    
     def __init__(self, env, config):
+        """
+        Parameters
+        ---------
+        env : env
+            The environment of a RL algorithm.
+            
+        config : config of parameters
+            Wandb's config file for storing and tracking parameters.
+            
+        action_space : space
+            The environment's action space.
+            
+        action_space_size : int
+            The number of values in the action space.
+            
+        observation_space : space
+            The environment's observation space.
+        
+        observation_space_size : int
+            The number of values in the observation space.
+                    
+        training_episode_rewards : list of ints
+            List of rewards during training.
+            
+        training_average_rewards : list of ints
+            List of average rewards during training.
+            
+        test_episode_rewards : list of floats
+            List of rewards during testing.
+            
+        test_average_rewards : list of floats
+            List of average rewards during testing.    
+        """
+        
         self.env = env
         self.config = config
         
@@ -42,14 +82,17 @@ class Agent:
         
         self.observation_space = env.observation_space
         self.observation_space_size = env.observation_space.shape[0]
-        
-        self.test_episode_rewards = []
-        self.test_average_rewards = []
 
         self.training_episode_rewards = []
         self.training_average_rewards = []
         
+        self.test_episode_rewards = []
+        self.test_average_rewards = []
         
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7a5d3d849553efa909755ef81040ddb9ce1ae084
         
         
         
