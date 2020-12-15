@@ -92,7 +92,27 @@ class DQNAgent(RLAgent):
             
     Methods (Do not mention parameter "self")
     -------
+    initialize_model()
+        Constructs and returns a DQN model.
+        
+    get_action(state)
+        Chooses and returns an action from the action space.
+        
+    add_to_memory(state, action, reward, next_state, done)
+        Adds an experience tuple to the memory list.
+        
+    sample_from_memory()
+        Randomly chooses and returns a memory from the memory list.
+        
+    extract_from_sample(sample)
+        Extracts and returns an experience tuple from a past experience.
     
+    learn_from_memory()
+        Adjusts the weights of the DQN utilizing a past experience.
+        
+    train()
+        Loop to train the DQN.
+        
     Returns (Expected returned values)
     -------
     
