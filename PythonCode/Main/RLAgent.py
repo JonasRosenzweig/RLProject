@@ -1,3 +1,5 @@
+
+
 class RLAgent:
     """
     A class used to build Reinforcement Learning algorithms.
@@ -40,39 +42,6 @@ class RLAgent:
     """
     
     def __init__(self, env, training_episodes, testing_episodes, frames):
-        """
-        Parameters
-        ---------
-        env : env
-            The environment of a RL algorithm.
-            
-        action_space : space
-            The environment's action space.
-            
-        observation_space : space
-            The environment's observation space.
-            
-        training_episodes : int
-            Maximum number of training episodes.
-            
-        testing_episodes : int
-            Maximum number of testing episodes.
-            
-        frames : int
-            Maximum number of frames during an episode.
-        
-        training_episode_rewards : list of ints
-            List of rewards during training.
-            
-        training_average_rewards : list of ints
-            List of average rewards during training.
-            
-        test_episode_rewards : list of floats
-            List of rewards during testing.
-            
-        test_average_rewards : list of floats
-            List of average rewards during testing   .     
-        """
     
         self.env = env
         
@@ -89,7 +58,5 @@ class RLAgent:
         
         self.test_episode_rewards = []
         self.test_average_rewards = []
-        
-        
         
         
