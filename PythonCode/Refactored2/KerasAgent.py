@@ -16,8 +16,11 @@ from rl.policy import BoltzmannQPolicy, EpsGreedyQPolicy
 from rl.memory import SequentialMemory
 from rl.callbacks import Callback
 import random
+import wandb
 
 ENV_NAME = 'LunarLander-v2'
+
+wandb.init(project="KerasDQN", name = "Performance")
 
 env = gym.make(ENV_NAME)
 # To get repeatable results.
@@ -81,6 +84,7 @@ class LivePlotCallback(Callback):
         if len(self.rewardbuf) > self.avgwindow:
             del self.rewardbuf[0]
         self.rewards[self.episode] = rw
+        wandb.log({'reward': rw}, step = episode)
         self.avgrewards[self.episode] = np.mean(self.rewardbuf)
         self.plot()
         self.episode += 1
@@ -101,4 +105,6 @@ dqn.fit(env, nb_steps=1000000, visualize=False, verbose=2, callbacks=cbs)
 dqn.save_weights('monitor/dqn_{}_weights.h5f'.format(ENV_NAME), overwrite=True)
 
 # evaluate the algorithm for 100 episodes.
-#dqn.test(env, nb_episodes=100, visualize=True)
+
+
+dqn.test(env, nb_episodes=100, visualize=True)

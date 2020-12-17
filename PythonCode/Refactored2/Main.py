@@ -34,7 +34,7 @@ if __name__ == '__main__':
     input_layer_mult = 2
     
     memory_size = 100_000
-    batch_size = 8
+    batch_size = 64
     replay_step_size = 5
     
     experiment_episodes = 2
