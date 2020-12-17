@@ -82,7 +82,6 @@ class QAgent(RLAgent):
         
         self.Q = np.zeros(self.buckets + (self.env.action_space.n,))
         
-            
     def discretize(self, state):
         upper_bounds = [self.env.observation_space.high[0], 0.5,
                         self.env.observation_space.high[2], math.radians(50)]
