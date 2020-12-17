@@ -67,7 +67,6 @@ class QAgent(RLAgent):
     
     run()
         Loop to train the Q-agent.
-    
     """
     
     def __init__(self, env, gamma, min_learning_rate, epsilon_min, divisor,
