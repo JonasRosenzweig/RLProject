@@ -24,19 +24,44 @@ class QAgent(RLAgent):
     min_learning_rate : float
         The minimum learning rate.
         
-    epsilon_min : TYPE
-        DESCRIPTION.
-    divisor : TYPE
-            DESCRIPTION.
-    buckets : TYPE
-            DESCRIPTION.
-    training_episodes : TYPE
-            DESCRIPTION.
-    testing_episodes : TYPE
-            DESCRIPTION.
-    frames : TYPE
-            DESCRIPTION.
-
+    epsilon_min : float
+        The minimum epsilon value.
+        
+    divisor : int or float
+        Number used in learning rate decay.
+        
+    buckets : tuple of ints
+        Tuple used to discretize the observation space.
+        
+    training_episodes : int
+        Maximum number of training episodes.
+        
+    testing_episodes : int
+        Maximum number of testing episodes.
+        
+    frames : int
+        Maximum number of frames during an episode.
+        
+    Methods
+    -------
+    discretize(state)
+        Takes an observation space and returns a discreticed observation space.
+    
+    get_action(state, epsilon)
+        Chooses and returns an action from the action space.
+        
+    update_Q(state, action, reward, next_state, learning_rate)
+        Updates the state-action pairs and Q values in the Q-table.
+    
+    get_epsilon(episode)
+        Decays and returns the epsilon.
+    
+    get_learning_rate(episode)
+        Decays and returns the learning rate.
+    
+    run()
+        Loop to train the Q-agent.
+    
     """
     
     def __init__(self, env, gamma, min_learning_rate, epsilon_min, divisor,
