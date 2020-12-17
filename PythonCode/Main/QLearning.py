@@ -13,6 +13,12 @@ import math
 
 class QAgent(RLAgent):
     """
+    A class used to build Q-learning algorithms.
+    
+    This subclass of RLAgent allows to build Q-learning algorithms with
+    externally specified (hyper-)parameters and provides the necessary methods
+    for training an algorithm.
+    
     Attributes
     ----------
     env : env
