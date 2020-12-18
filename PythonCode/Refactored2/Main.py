@@ -73,7 +73,7 @@ if __name__ == '__main__':
     agent1 = DQAgent(env, config)
    
     # agent2 = QAgent(env, config)
-    
+    # New change
     
     
     agent1_run_config = {"training_episodes": training_episodes, "steps": steps, "render": render, 
