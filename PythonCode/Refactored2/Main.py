@@ -6,7 +6,7 @@ import wandb
 from QAgent import QAgent
 from DQAgent import DQAgent
 from Run import Train, Test
-from Experiments import  gammaExperiment, learningRateExperiment, epsilonDecayExperiment
+from Experiments import  HPSearch
 
 """
 This code has been inspired by:
@@ -81,11 +81,11 @@ if __name__ == '__main__':
     Train(agent1, agent1_run_config, goal, min_reward)
     
     gamma_experiment_config = {"experiment_episodes": experiment_episodes, "gammas": gammas}
-    gammaExperiment(agent1, gamma_experiment_config)
+    HPSearch.gammaExperiment(agent1, gamma_experiment_config)
     
     learning_rate_experiment_config = {"experiment_episodes": experiment_episodes, "learning_rates": learning_rates}
-    learningRateExperiment(agent1, learning_rate_experiment_config)
+    HPSearch.learningRateExperiment(agent1, learning_rate_experiment_config)
     
     epsilon_decay_experiment_config = {"experiment_episodes": experiment_episodes, "epsilon_decays": epsilon_decay}
-    epsilonDecayExperiment(agent1, epsilon_decay_experiment_config)
+    HPSearch.epsilonDecayExperiment(agent1, epsilon_decay_experiment_config)
     
