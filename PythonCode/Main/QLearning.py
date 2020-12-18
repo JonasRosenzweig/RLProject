@@ -69,7 +69,7 @@ class QAgent(RLAgent):
         Loop to train the Q-agent.
     """
     
-    def __init__(self, env, gamma, learning_rate, epsilon, epsilon_min, divisor,
+    def __init__(self, env, gamma, learning_rate, epsilon, epsilon_min, epsilon_decay, divisor,
                  buckets, training_episodes, testing_episodes, frames):
         
         RLAgent.__init__(self, env, training_episodes, testing_episodes, frames)
@@ -78,6 +78,7 @@ class QAgent(RLAgent):
         self.learning_rate = learning_rate
         self.epsilon = epsilon
         self.epsilon_min = epsilon_min
+        self.epsilon_decay = epsilon_decay
         self.divisor = divisor 
         self.buckets = (3,3,6,6,)
         
@@ -112,9 +113,6 @@ class QAgent(RLAgent):
                 reward + self.gamma * np.max(
                 self.Q[next_state]) - self.Q[state][action])
         
-        return max(self.epsilon_min, min(1.0,
-                     1.0 - math.log10((episode + 1)/self.divisor)))
-    
     def run(self):
         print("running")
         for episode in range(self.training_episodes):
