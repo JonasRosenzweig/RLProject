@@ -217,21 +217,19 @@ class DQNAgent(RLAgent):
         # Adjusts the policy based on states, target vectors and other things
         self.model.fit(states, target_vec, epochs=1, verbose=0)
      
-    # Save the model for testing purposes
+    # Save the model for testing purposes.
     def save(self, name):
         self.model.save(name)
     
-    # 
+    # Update counter to determining when to learn from past experiences.
     def update_counter(self):
         self.replay_counter += 1
         step_size = 5
         self.replay_counter = self.replay_counter % step_size       
-        
+    
+    # Loop to train the DQN.
     def train(self):
         start_time = time.time()
-        
-        # wandb.init(project="DQN-LunarLander-v2_with_Config", 
-        # name=self.config.name)
         
         for episode in range(self.training_episodes):
             
@@ -290,12 +288,16 @@ class DQNAgent(RLAgent):
             # average above 200).
             if average_reward > 200:
                 break
+            # Stop if the model can not improve within a specified number of
+            # episodes.
             if average_reward < -400 and episode > 100:
                 break
             if average_reward < -300 and episode > 200:
                 break
             if average_reward < -200 and episode > 300:
                 break
+            # Stop training if the model has exceeded the time limit of 30
+            # minutes.
             train_time_minutes = (time.time() - start_time)/60
             if train_time_minutes > 30:
                 break
