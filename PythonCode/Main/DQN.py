@@ -131,27 +131,24 @@ class DQNAgent(RLAgent):
     def initialize_model(self):
         model = Sequential()
         
-        # Input layer (based on observation space of the environment)
+        # Add input layer (based on observation space of the environment)
         model.add(Dense(self.config.layer_size*self.config.input_layer_mult,
                         input_dim = self.observation_space_dim,
                         activation=relu))
         
-        # Deep layers
+        # Add deep layers
         for i in range(self.config.deep_layers):
             model.add(Dense(self.config.layer_size, activation=relu))
         
-        # Output layer (based on action space of the environment)
+        # Add output layer (based on action space of the environment)
         model.add(Dense(self.action_space_dim, activation=linear))
         
-        # Compile the model giving the loss and the optimizer as an argument.
+        # Compile the model giving the loss function and the optimizer as an 
+        # argument.
         model.compile(loss=mean_squared_error, 
                       optimizer=Adam(lr=self.config.learning_rate))
         
-        # Prints out the stats of the model to give an overview over what was
-        # just created.
-        #print(self.config.name)
-        
-        
+        # Prints a detailed description of the created model.
         print(model.summary())
         
         return model
@@ -172,14 +169,17 @@ class DQNAgent(RLAgent):
         # Return the action to be taken in the current state.
         return np.argmax(predicted_actions[0])
     
+    # Add the experience from taking an action to a list of memories for
+    # learning later on.
     def add_to_memory(self, state, action, reward, next_state, done):
         self.memory.append((state, action, reward, next_state, done))
     
-    # Choose a random past experience from the replay memory
+    # Choose a random past experience from the replay memory.
     def sample_from_memory(self):
         sample = random.sample(self.memory, self.config.batch_size)
         return sample
     
+    # Get the information from the chosen experience.
     def extract_from_sample(self, sample):
         states = np.array([i[0] for i in sample])
         actions = np.array([i[1] for i in sample])
@@ -190,6 +190,7 @@ class DQNAgent(RLAgent):
         next_states = np.squeeze(next_states)
         return np.squeeze(states), actions, rewards, next_states, done_list
     
+    # Learn from a randomly chosen past experience.
     def learn_from_memory(self):
         
         # replay_memory_buffer size check
@@ -215,7 +216,17 @@ class DQNAgent(RLAgent):
         
         # Adjusts the policy based on states, target vectors and other things
         self.model.fit(states, target_vec, epochs=1, verbose=0)
-               
+     
+    # Save the model for testing purposes
+    def save(self, name):
+        self.model.save(name)
+    
+    # 
+    def update_counter(self):
+        self.replay_counter += 1
+        step_size = 5
+        self.replay_counter = self.replay_counter % step_size       
+        
     def train(self):
         start_time = time.time()
         
@@ -307,14 +318,6 @@ Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
                         self.training_frame_count))
         
         self.env.close()
-            
-    def save(self, name):
-        self.model.save(name)
-    
-    def update_counter(self):
-        self.replay_counter += 1
-        step_size = 5
-        self.replay_counter = self.replay_counter % step_size
     
     def test_trained_model(self, trained_model):
         
