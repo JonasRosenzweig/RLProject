@@ -7,7 +7,9 @@ from DQN import DQNAgent
 from QLearning import QAgent
 from keras.models import load_model
 
-
+"""
+This code has been inspired by:
+"""
 
 if __name__ == '__main__':
     

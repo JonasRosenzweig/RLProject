@@ -8,6 +8,10 @@ from DQAgent import DQAgent
 from Run import Train, Test
 from Experiments import  gammaExperiment, learningRateExperiment, epsilonDecayExperiment
 
+"""
+This code has been inspired by:
+"""
+
 if __name__ == '__main__':
     
     env = gym.make('LunarLander-v2')
