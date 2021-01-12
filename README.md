@@ -13,7 +13,7 @@ in this order, type:
 
 pip install gym[all]
 
-conda install tensorflow
+conda install tensorflow (not sure if required)
 
 conda install keras
 
