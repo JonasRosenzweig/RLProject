@@ -19,7 +19,7 @@ conda install keras
 
 conda install wandb (for logging, comment any mention of wandb if you don't want this)
 
-conda install Box2D
+pip install Box2D
 
 if you have a CUDA optimized card it is recommended to get keras-gpu 
 
