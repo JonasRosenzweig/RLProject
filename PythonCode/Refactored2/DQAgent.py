@@ -4,8 +4,12 @@ from collections import deque
 
 from QAgent import QAgent
 
-from keras import Sequential
-from keras.layers import Dense
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+from keras.layers import Dense, Input
+# from keras import Sequential
+# from keras.layers import Dense
 from keras.activations import relu, linear
 from keras.optimizers import Adam
 from keras.losses import mean_squared_error
