@@ -19,7 +19,7 @@ class DQAgent(QAgent):
         QAgent.__init__(self, env, config)
         
         self.config = config
-        self.name = "DQAgent"
+        self.name = config.name
         self.memory = deque(maxlen=self.config.memory_size)
         self.model = self.initialize()
     

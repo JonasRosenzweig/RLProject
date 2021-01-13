@@ -50,7 +50,9 @@ if __name__ == '__main__':
     config = wandb.config
     agent1 = DQAgent(env, config)
     agent2 = QAgent(env, config)
-    name = agent1.name
+    
+    name = "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time()))
+    # name = agent1.name
     
     run = wandb.init(project="Refactor-Test",
                                   config = {"deep_layers": deep_layers,
