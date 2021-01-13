@@ -24,15 +24,20 @@ class DQAgent(QAgent):
         self.model = self.initialize()
     
     def initialize(self):
-        model = Sequential()
-        model.add(Dense(self.config.layer_size*self.config.input_layer_mult, 
-                        input_dim = self.observation_space_size, activation=relu))
-        for i in range(self.config.deep_layers):
-            model.add(Dense(self.config.layer_size, activation=relu))
-        model.add(Dense(self.action_space_size, activation=linear))
-        model.compile(loss=mean_squared_error, 
-                      optimizer=Adam(lr=self.config.learning_rate))
-        print(model.summary())
+        
+        inputs = Input(shape=(8,))
+        
+        dense = Dense(self.config.layer_size * self.config.input_layer_mult, activation = relu)
+        x = dense(inputs)
+        x = Dense(self.config.layer_size, activation = relu)
+        
+        outputs = layers.Dense(self.action_space_size, activation = linear)(x)
+        
+        model = keras.Model(inputs = inputs, outputs = outputs, name = name)
+
+        model.compile(loss = mean_squared_error, optimizer = Adam(lr = self.config.learning_rate))
+        model.summary()
+
         return model
     
     def policyAct(self, state):
