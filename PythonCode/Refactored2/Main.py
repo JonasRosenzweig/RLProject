@@ -47,10 +47,6 @@ if __name__ == '__main__':
     goal = 200
     min_reward = -300
     
-    config = wandb.config
-    agent1 = DQAgent(env, config)
-    agent2 = QAgent(env, config)
-    
     name = "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time()))
     # name = agent1.name
     
@@ -70,7 +66,12 @@ if __name__ == '__main__':
                                       "name": name})
             
     
+    config = wandb.config
     
+    
+    # agent2 = QAgent(env, config)
+    agent1 = DQAgent(env, config)
+    # AttributeError: 'function' object has no attribute 'buckets'
     
     agent1_run_config = {"training_episodes": training_episodes, "steps": steps, "render": render, 
                     "early_stop": early_stop, "episode_time_limit": episode_time_limit}

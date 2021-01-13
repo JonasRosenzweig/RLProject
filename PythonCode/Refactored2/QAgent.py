@@ -10,8 +10,8 @@ class QAgent(Agent):
     def __init__(self, env, config):
         Agent.__init__(self, env, config)
         
+        self.config = config
         self.buckets = self.config.buckets
-        self.config = self.config
         self.name = config.name
         self.Qtable = np.zeros(self.config.buckets + (env.action_space.n,))
         
