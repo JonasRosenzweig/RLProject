@@ -33,7 +33,7 @@ class DQAgent(QAgent):
         
         outputs = layers.Dense(self.action_space_size, activation = linear)(x)
         
-        model = keras.Model(inputs = inputs, outputs = outputs, name = name)
+        model = keras.Model(inputs = inputs, outputs = outputs, name = self.name)
 
         model.compile(loss = mean_squared_error, optimizer = Adam(lr = self.config.learning_rate))
         model.summary()
