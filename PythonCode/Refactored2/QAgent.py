@@ -13,7 +13,7 @@ class QAgent(Agent):
         self.config = config
         self.buckets = self.config.buckets
         self.name = config.name
-        self.Qtable = np.zeros(self.config.buckets + (env.action_space.n,))
+        self.Qtable = np.zeros(tuple(self.config.buckets) + (env.action_space.n,))
         
     def discretize(self, state):
         upper_bounds = [self.env.observation_space.high[0], 0.5, self.env.observation_space.high[2], math.radians(50)]
