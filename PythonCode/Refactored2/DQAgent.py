@@ -29,7 +29,7 @@ class DQAgent(QAgent):
         
         dense = Dense(self.config.layer_size * self.config.input_layer_mult, activation = relu)
         x = dense(inputs)
-        x = Dense(self.config.layer_size, activation = relu)
+        x = Dense(self.config.layer_size, activation = relu)(x)
         
         outputs = layers.Dense(self.action_space_size, activation = linear)(x)
         
