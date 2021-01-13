@@ -68,7 +68,7 @@ class Train(Run):
             if Agent.config.epsilon > Agent.config.epsilon_min:
                 Agent.config.epsilon *= Agent.config.epsilon_decay
             
-            average_reward = np.mean(Agent.training_episode_rewards[-100:])
+            average_reward = np.mean(self.training_episode_rewards[-100:])
             train_time_minutes = (time.time() - start_time)/60
             
             if average_reward > run_config['goal']:

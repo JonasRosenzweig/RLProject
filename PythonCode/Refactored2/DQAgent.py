@@ -7,12 +7,12 @@ from QAgent import QAgent
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
-from keras.layers import Dense, Input
+from tensorflow.keras.layers import Dense, Input
 # from keras import Sequential
 # from keras.layers import Dense
-from keras.activations import relu, linear
-from keras.optimizers import Adam
-from keras.losses import mean_squared_error
+from tensorflow.keras.activations import relu, linear
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.losses import mean_squared_error
 
 class DQAgent(QAgent):
     def __init__(self, env, config):

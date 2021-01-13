@@ -74,7 +74,7 @@ if __name__ == '__main__':
     # AttributeError: 'function' object has no attribute 'buckets'
     
     agent1_run_config = {"training_episodes": training_episodes, "steps": steps, "render": render, 
-                    "early_stop": early_stop, "episode_time_limit": episode_time_limit}
+                    "early_stop": early_stop, "episode_time_limit": episode_time_limit, "goal": goal, "min_reward": min_reward}
     Train(agent1, agent1_run_config, goal, min_reward)
     
     gamma_experiment_config = {"experiment_episodes": experiment_episodes, "gammas": gammas}
