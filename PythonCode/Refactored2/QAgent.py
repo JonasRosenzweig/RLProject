@@ -12,7 +12,7 @@ class QAgent(Agent):
         
         self.buckets = self.config.buckets
         self.config = self.config
-        self.name = "QAgent"
+        self.name = config.name
         self.Qtable = np.zeros(self.config.buckets + (env.action_space.n,))
         
     def discretize(self, state):
