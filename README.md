@@ -17,7 +17,7 @@ conda install tensorflow (not sure if required)
 
 conda install keras
 
-conda install wandb (for logging, comment any mention of wandb if you don't want this)
+pip install wandb (for logging, comment any mention of wandb if you don't want this)
 
 pip install Box2D
 
