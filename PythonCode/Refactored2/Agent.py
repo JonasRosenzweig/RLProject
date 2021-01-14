@@ -36,6 +36,7 @@ class Agent:
     def __init__(self, env, config):
         self.env = env
         self.config = config
+        self.name = self.config.name
         
         self.action_space = env.action_space
         self.action_space_size = env.action_space.n

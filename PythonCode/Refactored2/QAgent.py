@@ -10,9 +10,7 @@ class QAgent(Agent):
     def __init__(self, env, config):
         Agent.__init__(self, env, config)
         
-        self.config = config
         self.buckets = self.config.buckets
-        self.name = config.name
         self.Qtable = np.zeros(tuple(self.config.buckets) + (env.action_space.n,))
         
     def discretize(self, state):
