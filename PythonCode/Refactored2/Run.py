@@ -125,6 +125,17 @@ Last Frame Reward: {:.2f}\t|| Average Reward: {:.2f}"""
                 print("Training for Gamma: {}".format(gamma))
                 self.train(self, goal, min_reward)
                 self.gamma_rewards.append(self.training_episode_rewards)
+                
+    def learningRateExperiment(self):
+        print("Running Experiment for Learning Rate")
+        for episode in range(self.run_config['experiment_episodes']):
+            
+            for learning_rate in self.run_config['learning_rates']:
+                print("Training for Learning Rate: {}".format(learning_rate))
+                self.train(self, goal, min_reward)
+                self.learning_rate_rewards.append(self.training_episode_rewards)
+        
+    
 class Train(Run):
     def __init__(self, Agent, run_config, goal, min_reward):
         print("Training {}".format(Agent.name))
@@ -235,3 +246,14 @@ class gammaExperiment(Run):
                 print("Training for Gamma: {}".format(gamma))
                 Train(Agent, run_config)
                 self.gamma_rewards.append(self.training_episode_rewards)
+
+class learningRateExperiment(Run):
+    def __init__(self, Agent, run_config):
+        print("Running Experiment for Learning Rate")
+        Run.__init__(self, Agent, run_config)
+        for episode in range(run_config['experiment_episodes']):
+            
+            for learning_rate in run_config['learning_rates']:
+                print("Training for Learning Rate: {}".format(learning_rate))
+                Train(Agent, run_config)
+                self.learning_rate_rewards.append(self.training_episode_rewards)
