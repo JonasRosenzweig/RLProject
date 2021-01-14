@@ -134,6 +134,16 @@ Last Frame Reward: {:.2f}\t|| Average Reward: {:.2f}"""
                 print("Training for Learning Rate: {}".format(learning_rate))
                 self.train(self, goal, min_reward)
                 self.learning_rate_rewards.append(self.training_episode_rewards)
+                
+    def epsilonDecayExperiment(self):
+        print("Running Experiment for Epsilon Decay")
+        for episode in range(self.run_config['experiment_episodes']):
+            
+            for epsilon_decay in self.run_config['epsilon_decays']:
+                print("Training for Epsilon Decay: {}".format(epsilon_decay))
+                Train(Agent, goal, min_reward)
+                self.epsilon_decay_rewards.append(self.training_episode_rewards)   
+        
         
     
 class Train(Run):
@@ -257,3 +267,15 @@ class learningRateExperiment(Run):
                 print("Training for Learning Rate: {}".format(learning_rate))
                 Train(Agent, run_config)
                 self.learning_rate_rewards.append(self.training_episode_rewards)
+                   
+class epsilonDecayExperiment(Run):
+    def __init__(self, Agent, run_config):
+        print("Running Experiment for Epsilon Decay")
+        Run.__init__(self, Agent, run_config)
+        for episode in range(run_config['experiment_episodes']):
+            
+            for epsilon_decay in run_config['epsilon_decays']:
+                print("Training for Learning Rate: {}".format(epsilon_decay))
+                Train(Agent, run_config)
+                self.epsilon_decay_rewards.append(self.training_episode_rewards)                
+    

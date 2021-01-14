@@ -30,7 +30,7 @@ class epsilonDecayExperiment(Run):
         for episode in range(run_config['experiment_episodes']):
             
             for epsilon_decay in run_config['epsilon_decays']:
-                print("Training for Learning Rate: {}".format(epsilon_decay))
+                print("Training for Epsilon Decay: {}".format(epsilon_decay))
                 Train(Agent, run_config)
                 self.epsilon_decay_rewards.append(self.training_episode_rewards)
     
