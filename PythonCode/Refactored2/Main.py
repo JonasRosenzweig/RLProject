@@ -35,7 +35,7 @@ if __name__ == '__main__':
     
     memory_size = 100_000
     batch_size = 64
-    replay_counter = 5
+    replay_step_size = 5
     
     # For running
     experiment_episodes = 2
@@ -59,7 +59,7 @@ if __name__ == '__main__':
                                       "input_layer_mult": input_layer_mult,
                                       "learning_rate": learning_rate,
                                       "epsilon": epsilon,
-                                      "replay_counter": replay_counter,
+                                      "replay_step_size": replay_step_size,
                                       "gamma": gamma,
                                       "epsilon_decay": epsilon_decay,
                                       "epsilon_min": epsilon_min,

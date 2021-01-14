@@ -9,11 +9,11 @@ class Run:
         self.run_config = run_config
         self.Agent = Agent
        
-        self.test_episode_rewards = []
-        self.test_average_rewards = []
+        #self.test_episode_rewards = []
+        #self.test_average_rewards = []
 
-        self.training_episode_rewards = []
-        self.training_average_rewards = []
+        #self.training_episode_rewards = []
+        #self.training_average_rewards = []
         
         self.gamma_rewards = []
         self.learning_rate_rewards = []
@@ -24,27 +24,28 @@ class Run:
     def train(self):
         print("Training {}".format(self.Agent.name))
         start_time = time.time()
+        self.Agent.replay_counter = 0
         
-        for episode in range(self.run_config.training_episodes):
+        for episode in range(self.run_config["training_episodes"]):
             
             episode_reward = 0
             episode_frame_count = 0
             state = self.Agent.env.reset()
-            if self.Agent.config.name == "QAgent":
+            if self.Agent.model_type == "QAgent":
                 self.state = self.Agent.discretize(state)
-            elif self.Agent.config.name == "DQAgent":
+            elif self.Agent.model_type == "DQAgent":
                 state = np.reshape(state, [1, self.Agent.observation_space_size])
                 
-            for step in range(self.run_config.steps):
+            for step in range(self.run_config["steps"]):
                 action = self.Agent.act(state)
                 next_state, reward, done, info = self.Agent.env.step(action)
                 
-                if self.Agent.config.name == "QAgent":
+                if self.Agent.model_type == "QAgent":
                     next_state = self.Agent.discretize(state)
                     self.Agent.updateQ(state, action, reward, next_state, done)
                     state = next_state
                 
-                if self.Agent.config.name == "DQAgent":
+                if self.Agent.model_type == "DQAgent":
                     next_state = np.reshape(next_state, [1, self.Agent.observation_space_size])
                     self.Agent.addToMemory(state, action, reward, next_state, done)
                     state = next_state
@@ -55,7 +56,7 @@ class Run:
                 episode_frame_count += 1
                 self.run_frame_count += 1
                 
-                if self.run_config.render == True:
+                if self.run_config["render"] == True:
                     self.Agent.env.render()
                 
                 if done:
@@ -67,11 +68,11 @@ class Run:
             average_reward = np.mean(self.training_episode_rewards[-100:])
             train_time_minutes = (time.time() - start_time)/60
             
-            if average_reward > self.run_config.goal:
+            if average_reward > self.run_config["goal"]:
                 break
-            if average_reward < self.run_configmin_reward and episode > 100 and self.run_config.early_stop:
+            if average_reward < self.run_config["min_reward"] and episode > 100 and self.run_config["early_stop"]:
                 break
-            if train_time_minutes > self.run_config.episode_time_limit and self.run_config.early_stop:
+            if train_time_minutes > self.run_config["episode_time_limit"] and self.run_config["early_stop"]:
                 break
             self.training_episode_rewards.append(episode_reward)
             self.training_average_rewards.append(average_reward)
@@ -86,18 +87,18 @@ Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
         print("Testing {}".format(self.Agent.name))
         self.trained_model = trained_model
         
-        for episode in range(self.run_config.episodes):
+        for episode in range(self.run_config["episodes"]):
             episode_reward = 0
             state = self.Agent.env.reset()
-            if self.Agent.config.name == "QAgent":
+            if self.Agent.model_type == "QAgent":
                 pass
-            if self.Agent.config.name == "DQAgent":
+            if self.Agent.model_type == "DQAgent":
                 state = np.reshape(state, [1, self.Agent.observation_space_size])
             
-            for step in range(self.run_config.steps):
-                if self.Agent.config.name == "QAgent":
+            for step in range(self.run_config["steps"]):
+                if self.Agent.model_type == "QAgent":
                     pass
-                if self.Agent.config.name == "DQAgent":
+                if self.Agent.model_type == "DQAgent":
                     action = np.argmax(trained_model.predict(state)[0])
                     next_state, reward, done, info = self.Agent.env.step(action)
                     next_state = np.reshape(state, [1, self.Agent.observation_space_size])
@@ -157,21 +158,21 @@ class Train(Run):
             episode_reward = 0
             episode_frame_count = 0
             state = Agent.env.reset()
-            if Agent.config.name == "QAgent":
+            if Agent.model_type == "QAgent":
                 state = Agent.discretize(state)
-            elif Agent.config.name == "DQAgent":
+            elif Agent.model_type == "DQAgent":
                 state = np.reshape(state, [1, Agent.observation_space_size])
                 
             for step in range(run_config['steps']):
                 action = Agent.act(state)
                 next_state, reward, done, info = Agent.env.step(action)
                 
-                if Agent.config.name == "QAgent":
+                if Agent.model_type == "QAgent":
                     next_state = Agent.discretize(state)
                     Agent.updateQ(state, action, reward, next_state, done)
                     state = next_state
                 
-                if Agent.config.name == "DQAgent":
+                if Agent.model_type == "DQAgent":
                     next_state = np.reshape(next_state, [1, Agent.observation_space_size])
                     Agent.addToMemory(state, action, reward, next_state, done)
                     state = next_state
@@ -218,15 +219,15 @@ class Test(Train):
         for episode in range(run_config.episodes):
             episode_reward = 0
             state = Agent.env.reset()
-            if Agent.config.name == "QAgent":
+            if Agent.model_type == "QAgent":
                 pass
-            if Agent.config.name == "DQAgent":
+            if Agent.model_type == "DQAgent":
                 state = np.reshape(state, [1, Agent.observation_space_size])
             
             for step in range(run_config.steps):
-                if Agent.config.name == "QAgent":
+                if Agent.model_type == "QAgent":
                     pass
-                if Agent.config.name == "DQAgent":
+                if Agent.model_type == "DQAgent":
                     action = np.argmax(trained_model.predict(state)[0])
                     next_state, reward, done, info = Agent.env.step(action)
                     next_state = np.reshape(state, [1, Agent.observation_space_size])

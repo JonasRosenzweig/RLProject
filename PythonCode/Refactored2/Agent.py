@@ -42,11 +42,19 @@ class Agent:
         self.config = config
         self.name = self.config.name
         
+        
         self.action_space = env.action_space
         self.action_space_size = env.action_space.n
         
         self.observation_space = env.observation_space
         self.observation_space_size = env.observation_space.shape[0]
+        
+        self.test_episode_rewards = []
+        self.test_average_rewards = []
+        
+        self.training_episode_rewards = []
+        self.training_average_rewards = []
+        
         
         
         self.replay_count = 0
