@@ -76,8 +76,16 @@ if __name__ == '__main__':
     # Train(agent1, agent1_run_config, goal, min_reward)
     
     
-    agent1_run_config = {"experiment_episodes": experiment_episodes, "training_episodes": training_episodes, "testing_episodes": testing_episodes, "steps": steps, "render": render, 
-                    "early_stop": early_stop, "episode_time_limit": episode_time_limit, "goal": goal, "min_reward": min_reward}
+    agent1_run_config = {"experiment_episodes": experiment_episodes, 
+                         "training_episodes": training_episodes, 
+                         "testing_episodes": testing_episodes, 
+                         "steps": steps, 
+                         "render": render, 
+                         "early_stop": early_stop, 
+                         "episode_time_limit": episode_time_limit, 
+                         "goal": goal, 
+                         "min_reward": min_reward}
+    
     Run = Run(agent1, agent1_run_config)
     Run.train()
     
