@@ -46,7 +46,7 @@ class DQAgent(QAgent):
         return np.argmax(predicted_actions[0])
     
     def act(self, state):
-        if np.random.random() <= self.config['epsilon']:
+        if np.random.random() <= self.config.epsilon:
             return self.randomAct(state)
         else:
             return self.policyAct(state)

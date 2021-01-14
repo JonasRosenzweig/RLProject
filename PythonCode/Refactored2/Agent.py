@@ -1,3 +1,7 @@
+import numpy as np
+import random
+from abc import abstractmethod
+
 class Agent:
     """
     A class used to build RL algorithms
@@ -48,6 +52,18 @@ class Agent:
         self.replay_count = 0
         
         
+    def randomAct(self, state):
+        return random.randrange(self.action_space_size)
+    
+    @abstractmethod
+    def policyAct(self, state):
+        pass
+    
+    def act(self, state):
+        if np.random.random() <= self.config.epsilon:
+            return self.randomAct(state)
+        else:
+            return self.policyAct(state)
         
         
         
