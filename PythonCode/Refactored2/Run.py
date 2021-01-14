@@ -84,6 +84,38 @@ Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
                 .format(episode, episode_reward, reward, average_reward, self.Agent.config.epsilon, episode_frame_count, self.run_frame_count))
         self.Agent.env.close()
         
+    def test(self, trained_model):
+        print("Testing {}".format(self.Agent.name))
+        self.trained_model = trained_model
+        
+        for episode in range(self.run_config.episodes):
+            episode_reward = 0
+            state = self.Agent.env.reset()
+            if self.Agent.config.name == "QAgent":
+                pass
+            if self.Agent.config.name == "DQAgent":
+                state = np.reshape(state, [1, self.Agent.observation_space_size])
+            
+            for step in range(self.run_config.steps):
+                if self.Agent.config.name == "QAgent":
+                    pass
+                if self.Agent.config.name == "DQAgent":
+                    action = np.argmax(trained_model.predict(state)[0])
+                    next_state, reward, done, info = self.Agent.env.step(action)
+                    next_state = np.reshape(state, [1, self.Agent.observation_space_size])
+                    state = next_state
+                episode_reward += reward
+                
+                if done: 
+                    break
+            
+            average_reward_trained = np.mean(self.trained_rewards[-100:])
+            self.test_episode_rewards.append(episode_reward)
+            self.test_average_rewards.append(average_reward_trained)
+            print("""Episode: {}\t\t\t|| Episode Reward: {:.2f}\
+Last Frame Reward: {:.2f}\t|| Average Reward: {:.2f}"""
+              .format(episode, episode_reward, reward, average_reward_trained))
+        self.Agent.env.close()
         
 class Train(Run):
     def __init__(self, Agent, run_config, goal, min_reward):
