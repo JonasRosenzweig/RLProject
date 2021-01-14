@@ -2,7 +2,7 @@ import numpy as np
 import random
 from collections import deque
 
-from QAgent import QAgent
+from Agent import Agent
 
 import tensorflow as tf
 from tensorflow import keras
@@ -14,9 +14,9 @@ from tensorflow.keras.activations import relu, linear
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.losses import mean_squared_error
 
-class DQAgent(QAgent):
+class DQAgent(Agent):
     def __init__(self, env, config):
-        QAgent.__init__(self, env, config)
+        Agent.__init__(self, env, config)
         
         self.memory = deque(maxlen=self.config.memory_size)
         self.model = self.initialize()
