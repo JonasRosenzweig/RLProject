@@ -21,6 +21,70 @@ class Run:
         
         self.run_frame_count = 0
 
+    def train(self, goal, min_reward):
+        print("Training {}".format(self.Agent.name))
+        start_time = time.time()
+        self.goal = goal
+        self.min_reward = min_reward
+        
+        for episode in range(self.run_config['training_episodes']):
+            
+            episode_reward = 0
+            episode_frame_count = 0
+            state = self.Agent.env.reset()
+            if self.Agent.config.name == "QAgent":
+                self.state = self.Agent.discretize(state)
+            elif self.Agent.config.name == "DQAgent":
+                state = np.reshape(state, [1, self.Agent.observation_space_size])
+                
+            for step in range(self.run_config['steps']):
+                action = self.Agent.act(state)
+                next_state, reward, done, info = self.Agent.env.step(action)
+                
+                if self.Agent.config.name == "QAgent":
+                    next_state = self.Agent.discretize(state)
+                    self.Agent.updateQ(state, action, reward, next_state, done)
+                    state = next_state
+                
+                if self.Agent.config.name == "DQAgent":
+                    next_state = np.reshape(next_state, [1, self.Agent.observation_space_size])
+                    self.Agent.addToMemory(state, action, reward, next_state, done)
+                    state = next_state
+                    self.Agent.updateReplayCount()
+                    self.Agent.learnFromMemory()
+                
+                episode_reward += reward
+                episode_frame_count += 1
+                self.run_frame_count += 1
+                
+                if self.run_config['render'] == True:
+                    self.Agent.env.render()
+                
+                if done:
+                    break
+                
+            if self.Agent.config.epsilon > self.Agent.config.epsilon_min:
+                self.Agent.config.epsilon *= self.Agent.config.epsilon_decay
+            
+            average_reward = np.mean(self.training_episode_rewards[-100:])
+            train_time_minutes = (time.time() - start_time)/60
+            
+            if average_reward > self.run_config['goal']:
+                break
+            if average_reward < self.run_config['min_reward'] and episode > 100 and self.run_config['early_stop']:
+                break
+            if train_time_minutes > self.run_config['episode_time_limit'] and self.run_config['early_stop']:
+                break
+            self.training_episode_rewards.append(episode_reward)
+            self.training_average_rewards.append(average_reward)
+            wandb.log({'average reward': average_reward, 'last reward': reward, 'epsilon': self.Agent.config.epsilon, 'episode': episode }, step=episode)
+            print("""Episode: {}\t\t\t|| Episode Reward: {:.2f}
+Last Frame Reward: {:.2f}\t|| Average Reward: {:.2f}\t|| Epsilon: {:.2f}
+Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
+                .format(episode, episode_reward, reward, average_reward, self.Agent.config.epsilon, episode_frame_count, self.run_frame_count))
+        self.Agent.env.close()
+        
+        
 class Train(Run):
     def __init__(self, Agent, run_config, goal, min_reward):
         print("Training {}".format(Agent.name))
