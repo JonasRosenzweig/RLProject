@@ -37,6 +37,7 @@ if __name__ == '__main__':
     batch_size = 64
     replay_counter = 5
     
+    # For running
     experiment_episodes = 2
     training_episodes = 2
     testing_episodes = 2

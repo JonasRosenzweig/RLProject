@@ -21,13 +21,11 @@ class Run:
         
         self.run_frame_count = 0
 
-    def train(self, goal, min_reward):
+    def train(self):
         print("Training {}".format(self.Agent.name))
         start_time = time.time()
-        self.goal = goal
-        self.min_reward = min_reward
         
-        for episode in range(self.run_config['training_episodes']):
+        for episode in range(self.run_config.training_episodes):
             
             episode_reward = 0
             episode_frame_count = 0
@@ -37,7 +35,7 @@ class Run:
             elif self.Agent.config.name == "DQAgent":
                 state = np.reshape(state, [1, self.Agent.observation_space_size])
                 
-            for step in range(self.run_config['steps']):
+            for step in range(self.run_config.steps):
                 action = self.Agent.act(state)
                 next_state, reward, done, info = self.Agent.env.step(action)
                 
@@ -57,7 +55,7 @@ class Run:
                 episode_frame_count += 1
                 self.run_frame_count += 1
                 
-                if self.run_config['render'] == True:
+                if self.run_config.render == True:
                     self.Agent.env.render()
                 
                 if done:
@@ -69,11 +67,11 @@ class Run:
             average_reward = np.mean(self.training_episode_rewards[-100:])
             train_time_minutes = (time.time() - start_time)/60
             
-            if average_reward > self.run_config['goal']:
+            if average_reward > self.run_config.goal:
                 break
-            if average_reward < self.run_config['min_reward'] and episode > 100 and self.run_config['early_stop']:
+            if average_reward < self.run_configmin_reward and episode > 100 and self.run_config.early_stop:
                 break
-            if train_time_minutes > self.run_config['episode_time_limit'] and self.run_config['early_stop']:
+            if train_time_minutes > self.run_config.episode_time_limit and self.run_config.early_stop:
                 break
             self.training_episode_rewards.append(episode_reward)
             self.training_average_rewards.append(average_reward)
@@ -123,7 +121,7 @@ Last Frame Reward: {:.2f}\t|| Average Reward: {:.2f}"""
             
             for gamma in self.run_config['gammas']:
                 print("Training for Gamma: {}".format(gamma))
-                self.train(self, goal, min_reward)
+                self.train()
                 self.gamma_rewards.append(self.training_episode_rewards)
                 
     def learningRateExperiment(self):
@@ -132,7 +130,7 @@ Last Frame Reward: {:.2f}\t|| Average Reward: {:.2f}"""
             
             for learning_rate in self.run_config['learning_rates']:
                 print("Training for Learning Rate: {}".format(learning_rate))
-                self.train(self, goal, min_reward)
+                self.train()
                 self.learning_rate_rewards.append(self.training_episode_rewards)
                 
     def epsilonDecayExperiment(self):
@@ -141,7 +139,7 @@ Last Frame Reward: {:.2f}\t|| Average Reward: {:.2f}"""
             
             for epsilon_decay in self.run_config['epsilon_decays']:
                 print("Training for Epsilon Decay: {}".format(epsilon_decay))
-                Train(Agent, goal, min_reward)
+                self.train()
                 self.epsilon_decay_rewards.append(self.training_episode_rewards)   
         
         
