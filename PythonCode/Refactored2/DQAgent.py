@@ -38,18 +38,9 @@ class DQAgent(QAgent):
 
         return model
     
-    def randomAct(self, state):
-        return random.randrange(self.action_space_size)
-    
     def policyAct(self, state):
         predicted_actions = self.model.predict(state)
         return np.argmax(predicted_actions[0])
-    
-    def act(self, state):
-        if np.random.random() <= self.config.epsilon:
-            return self.randomAct(state)
-        else:
-            return self.policyAct(state)
     
     def addToMemory(self, state, action, reward, next_state, done):
         self.memory.append((self, state, action, reward, next_state, done))

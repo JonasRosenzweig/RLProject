@@ -21,17 +21,8 @@ class QAgent(Agent):
         discretized_state = [min(self.buckets[i] - 1, max(0, discretized_state[i])) for i in range(len(state))]
         return tuple(discretized_state)
     
-    def randomAct(self, state):
-        return random.randrange(self.action_space_size)
-    
     def policyAct(self, state):
         np.argmax(self.Qtable[state])
-        
-    def act(self, state):
-        if np.random.random() <= self.config.epsilon:
-            return self.randomAct(state)
-        else:
-            return self.policyAct(state)
     
     def updateQ(self, state, action, reward, next_state):
         self.Qtable[state][action] += self.config.learning_rate * (reward + self.config.gamma * np.max(self.Qtable[next_state]) - self.Qtable[state][action])
