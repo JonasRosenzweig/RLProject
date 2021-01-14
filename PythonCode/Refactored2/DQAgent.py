@@ -38,12 +38,12 @@ class DQAgent(QAgent):
 
         return model
     
+    def randomAct(self, state):
+        return random.randrange(self.action_space_size)
+    
     def policyAct(self, state):
         predicted_actions = self.model.predict(state)
         return np.argmax(predicted_actions[0])
-    
-    def randomAct(self, state):
-        return random.randrange(self.action_space_size)
     
     def act(self, state):
         if np.random.random() <= self.config['epsilon']:
