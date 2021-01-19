@@ -55,6 +55,9 @@ if __name__ == '__main__':
         
     for i in range(repeats):
         
+        # trained_model = load_model("saved_modelsLR_0.0001_LS_1024_BS_64_MS_100000_Timestamp_1607963328sb.h5")
+        # model.test_trained_model(trained_model, num_episodes=100)
+    
         # Model previously finished in 221 Episodes
         learning_rate = 0.001
         layer_size = 256
