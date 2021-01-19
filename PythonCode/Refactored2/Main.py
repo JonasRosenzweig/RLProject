@@ -39,13 +39,13 @@ if __name__ == '__main__':
     
     # For running
     experiment_episodes = 2
-    training_episodes = 2
+    training_episodes = 2000
     testing_episodes = 2
     steps = 1000
     render = False
     early_stop = True
     episode_time_limit = 30
-    goal = 200
+    goal = 100
     min_reward = -300
     
     

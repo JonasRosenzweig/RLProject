@@ -67,6 +67,7 @@ class DQNAgent(RLAgent):
         
         # Keep track of how many frames the model ran through in total.
         self.training_frame_count = 0
+        self.trained_rewards = []
         
 
         
@@ -267,7 +268,7 @@ Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
             
             for step in range(steps):
             
-                # self.env.render()
+                self.env.render()
                 trained_action = np.argmax(trained_model.predict(trained_state)[0])
                 next_state, reward, done, info = self.env.step(trained_action)
                 next_state = np.reshape(next_state, [1, observation_space_dim])

@@ -30,8 +30,8 @@ if __name__ == '__main__':
     # batch_sizes = [64, 128]
     
     
-    training_episodes = 2000
-    testing_episodes = 0
+    training_episodes = 0
+    testing_episodes = 10
     frames = 1000
     hyper_param_counter = 0
     # total_runs = len(learning_rates)*len(layer_sizes)*len(memory_sizes)*len(batch_sizes)
@@ -83,17 +83,19 @@ if __name__ == '__main__':
         config = wandb.config
        
         
-        model = DQNAgent(env, config, epsilon, training_episodes, testing_episodes, frames)
+        agent = DQNAgent(env, config, epsilon, training_episodes, testing_episodes, frames)
         
         hyper_param_counter += 1
-        model.train()
+        agent.train()
         print("Run {} of {}.".format(hyper_param_counter, total_runs))
         model_dir = "saved_models"
         model_save_name = model_dir + "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time())) + "sb.h5"
-        model.save(model_save_name)
+        agent.save(model_save_name)
+        trained_model = load_model("saved_modelsLR_0.0001_LS_1024_BS_64_MS_100000_Timestamp_1607963328sb.h5")
+        agent.test_trained_model(trained_model)
         
         #---------------------------------------------------------------------------------------
-        
+        """
         # Model previously finished in 242 Episodes
         learning_rate = 0.001
         layer_size = 256
@@ -273,3 +275,4 @@ if __name__ == '__main__':
     # buckets = (3,3,6,6,)
     # model = QAgent(env, gamma, min_learning_rate, epsilon_min, divisor, buckets, training_episodes, testing_episodes, frames)
     # model.run()
+    """
