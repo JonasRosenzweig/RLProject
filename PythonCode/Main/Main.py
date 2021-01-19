@@ -5,6 +5,7 @@ import wandb
 
 from DQN import DQNAgent
 # from QLearning import QAgent
+from keras import Sequential
 from keras.models import load_model
 
 
@@ -55,7 +56,14 @@ if __name__ == '__main__':
         
     for i in range(repeats):
         
-        # Model previously finished in 221 Episodes
+        model = Sequential()
+        model = load_model("saved_modelsLR_0.0001_LS_1024_BS_64_MS_100000_Timestamp_1607963328sb.h5")
+        model.testing_episodes = 100
+        print("Model is: {} with testing episodes: {}".format(model.name, model.testing_episodes))
+        print(model.summary())
+        model.test_trained_model(model)
+    
+        """# Model previously finished in 221 Episodes
         learning_rate = 0.001
         layer_size = 256
         batch_size = 64
@@ -248,7 +256,7 @@ if __name__ == '__main__':
         print("Run {} of {}.".format(hyper_param_counter, total_runs))
         model_dir = "saved_models"
         model_save_name = model_dir + "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time())) + "sb.h5"
-        model.save(model_save_name)
+        model.save(model_save_name)"""
         
         #---------------------------------------------------------------------------------------
         

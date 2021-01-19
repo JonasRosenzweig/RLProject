@@ -170,7 +170,7 @@ class DQNAgent(RLAgent):
             
             for step in range(steps):
                 
-                #self.env.render()
+                self.env.render()
                 
                 # Decide what action to take.
                 exploit_action = self.get_action(state)
