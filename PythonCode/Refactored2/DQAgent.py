@@ -23,7 +23,6 @@ class DQAgent(Agent):
     def initialize(self):
         
         inputs = Input(shape=(8,))
-        
         dense = Dense(self.config.layer_size * self.config.input_layer_mult, activation = relu)
         x = dense(inputs)
         x = Dense(self.config.layer_size, activation = relu)(x)
@@ -50,12 +49,27 @@ class DQAgent(Agent):
     
     def extractFromSample(self, sample):
         states = np.array([i[0] for i in sample])
+        print("shape of states is: ", states.shape)
+        
         actions = np.array([i[1] for i in sample])
+        print("shape of actions is: ", actions.shape)
+        
         rewards = np.array([i[2] for i in sample])
+        print("shape of rewards is: ", rewards.shape)
+        
         next_states = np.array([i[3] for i in sample])
+        print("shape of next_states is: ", next_states.shape)
+        
         done_list = np.array([i[4] for i in sample])
+        print("shape of done_list is: ", done_list.shape)
+        
         states = np.squeeze(states)
+        print("shape of states after squeeze is: ", states.shape)
+        
         next_states = np.squeeze(next_states)
+        print("shape of next_states after squeeze is: ", next_states.shape)
+        
+        
         return np.squeeze(states), actions, rewards, next_states, done_list
     
     def updateReplayCount(self):
