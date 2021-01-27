@@ -95,6 +95,12 @@ class DQNAgent(RLAgent):
         return np.squeeze(states), actions, rewards, next_states, done_list
     
     
+    def update_counter(self):
+        self.replay_counter += 1
+        step_size = 5
+        self.replay_counter = self.replay_counter % step_size
+        
+        
     def learn_from_memory(self):
         
         # replay_memory_buffer size check (Needs rewording / more understanding)
@@ -197,11 +203,7 @@ Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
             
     def save(self, name):
         self.model.save(name)
-    
-    def update_counter(self):
-        self.replay_counter += 1
-        step_size = 5
-        self.replay_counter = self.replay_counter % step_size
+        
     
     # Makes a validation run of a trained model, which is very similar to a training run.
     def test_trained_model(self, trained_model):

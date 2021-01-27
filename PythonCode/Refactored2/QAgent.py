@@ -4,7 +4,6 @@ import numpy as np
 from Agent import Agent
 
 
-
 class QAgent(Agent):
     def __init__(self, env, config):
         Agent.__init__(self, env, config)
