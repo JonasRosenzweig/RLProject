@@ -4,56 +4,23 @@
 # Import the gym environment from OpenAI
 import random
 import numpy as np
-# import matplotlib.pyplot as plt
 from collections import deque
 import time
-# Allows for logging the results online via "Weights and Biases"
-# source: https://colab.research.google.com/drive/1aEv8Haa3ppfClcCiC2TB8WLHB4jnY_Ds
 import wandb
-import keras as keras
 from RLAgent import RLAgent
 
-# Sequential NN model is the most common one.
 from keras import Sequential
-# Layers used for NNs: Conv2D is usually used for image recognition,
-# Dense is commonly used, but may be prone to overfitting.
 from keras.layers import Dense
-# Allows using functions such as Flatten* (when trying to change from Conv2D to Dense layer)
-# or MaxPooling, which is used in Conv2D layers.
-# * Flatten converts 3D feature maps (Conv2D) into 1D feature vectors
-# from keras import Flatten, MaxPooling2D, Dropout
-# Activation functions: relu (rectified linear) is standard in NN
-# linear is used for the final layer to get just one possible answer.
 from keras.activations import relu, linear
-# Standard optimizer is adam.
 from keras.optimizers import Adam
 from keras.losses import mean_squared_error
-import time 
-from wandb.integration.keras import WandbCallback
-
-# metrics = [
-#       keras.metrics.BinaryAccuracy(name='accuracy'),
-#       keras.metrics.Precision(name='precision'),
-#       keras.metrics.Recall(name='recall'),
-# ]
-
 
 
 class DQNAgent(RLAgent):
     def __init__(self, env, config, epsilon, training_episodes, testing_episodes, frames):
         RLAgent.__init__(self, env, training_episodes, testing_episodes, frames)
         
-        # self.learning_rate = learning_rate
-        # self.gamma = gamma
         self.epsilon = epsilon
-        # self.epsilon_decay = epsilon_decay
-        # self.epsilon_min = epsilon_min
-        # self.memory_size = memory_size
-        # self.batch_size = batch_size
-        # Enables initalising NNs with multiple deep layers at varying size.
-        # self.deep_layers = deep_layers
-        # self.layer_size = layer_size
-        # self.input_layer_mult = input_layer_mult
         self.name = config.name
         
         self.action_space_dim = self.env.action_space.n
@@ -67,13 +34,10 @@ class DQNAgent(RLAgent):
         
         # Keep track of how many frames the model ran through in total.
         self.training_frame_count = 0
-        self.trained_rewards = []
-        
-
-        
-        
+        self.trained_rewards = []        
 
         self.model = self.initialize_model()
+        
         
     # Constructs model using sequential model and different (deep) layers.
     def initialize_model(self):
@@ -90,15 +54,12 @@ class DQNAgent(RLAgent):
         model.add(Dense(self.action_space_dim, activation=linear))
         
         # Compile the model giving the loss and the optimizer as an argument.
-        model.compile(loss=mean_squared_error, optimizer=Adam(lr=self.config.learning_rate))
-        
-        # Prints out the stats of the model to give an overview over what was just created.
-        #print(self.config.name)
-        
+        model.compile(loss=mean_squared_error, optimizer=Adam(lr=self.config.learning_rate))        
         
         print(model.summary())
         
         return model
+    
  
     # Decide whether to take an exploratory or exploitative action.
     def get_action(self, state):
@@ -113,8 +74,10 @@ class DQNAgent(RLAgent):
         # Return the action to be taken in the current state.
         return np.argmax(predicted_actions[0])
     
+    
     def add_to_memory(self, state, action, reward, next_state, done):
         self.memory.append((state, action, reward, next_state, done))
+        
     
     # Choose a random past experience from the replay memory
     def sample_from_memory(self):
@@ -130,6 +93,7 @@ class DQNAgent(RLAgent):
         states = np.squeeze(states)
         next_states = np.squeeze(next_states)
         return np.squeeze(states), actions, rewards, next_states, done_list
+    
     
     def learn_from_memory(self):
         
@@ -152,13 +116,10 @@ class DQNAgent(RLAgent):
         
         # Adjusts the policy based on states, target vectors and other things (needs more understanding)
         self.model.fit(states, target_vec, epochs=1, verbose=0)
-        # for callbacks : , callbacks=[WandbCallback(data_type="image")] problem with wandb logging, though needed for sweeps
         
         
     def train(self):
         start_time = time.time()
-        
-        #wandb.init(project="DQN-LunarLander-v2_with_Config", name=self.config.name)
         
         for episode in range(self.training_episodes):
             
@@ -230,22 +191,9 @@ class DQNAgent(RLAgent):
 Last Frame Reward: {:.2f}\t|| Average Reward: {:.2f}\t|| Epsilon: {:.2f}
 Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
                 .format(episode, episode_reward, reward, average_reward, self.epsilon, episode_frame_count, self.training_frame_count))
-            # print("""Tr Ep: {}, Ep Reward: {:.2f}, Last Reward: {:.2f}, Total Frames: {}, Frames: {}, Avg Reward: {:.2f}, 
-                   # Eps: {:.2f},""".format(episode, episode_reward, reward, self.training_frame_count, episode_frame_count, average_reward, self.epsilon))
-                      
-            # if episode % 50 == 0:
-            #     plt.plot(self.training_episode_rewards)
-            #     plt.plot(self.training_average_rewards)
-            #     plt.title("DQN Replay Training Performance Curve")
-            #     plt.xlabel("Episode")
-            #     plt.ylabel("Rewards")
-            #     plt.show()
         
         self.env.close()
         
-        # figname = "Figure_"
-        # figname = self.config.name
-        # plt.savefig("DQN_Replay_Training_Performance_Curve")
             
     def save(self, name):
         self.model.save(name)
@@ -286,20 +234,8 @@ Frames this episode: {}\t\t|| Total Frames trained: {}\n"""
             print("""Episode: {}\t\t\t|| Episode Reward: {:.2f}\
 Last Frame Reward: {:.2f}\t|| Average Reward: {:.2f}"""
               .format(episode, episode_reward, reward, average_reward_trained))
-                
-            # print("Tr Ep: {}, Ep Reward: {:.2f}, Last Reward: {:.2f}, Avg Reward: {:.2f}".format(episode,
-            #                                                                                  episode_reward, 
-            #                                                                                      reward, 
-            #                                                                                      average_reward_trained))
         
         self.env.close()
-        # plt.plot(self.test_episode_rewards)
-        # plt.plot(self.test_average_rewards)
-        # plt.title("DQN Replay Trained Performance Curve")
-        # plt.xlabel("Episode")
-        # plt.ylabel("Rewards")
-        # plt.show()
-            
             
             
         

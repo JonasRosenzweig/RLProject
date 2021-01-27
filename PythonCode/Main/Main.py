@@ -249,7 +249,7 @@ if __name__ == '__main__':
         print("Run {} of {}.".format(hyper_param_counter, total_runs))
         model_dir = "saved_models"
         model_save_name = model_dir + "LR_{}_LS_{}_BS_{}_MS_{}_Timestamp_{}".format(learning_rate, layer_size, batch_size, memory_size, int(time.time())) + "sb.h5"
-        model.save(model_save_name)"""
+        model.save(model_save_name)""""""
         
         #---------------------------------------------------------------------------------------
         
